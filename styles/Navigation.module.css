@@ -1,0 +1,50 @@
+.nav {
+    display: flex;
+    align-items: center;
+}
+
+.nav__link,
+.nav__link_active {
+    position: relative;
+    display: block;
+    padding: 10px 0;
+    margin: 0 20px;
+    color: #ccc;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: 0.5s;
+}
+
+.nav__link::after,
+.nav__link_active::after {
+    position: absolute;
+    content: '';
+    top: 100%;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: #3498db;
+}
+
+.nav__link::after {
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.5s;
+}
+
+.nav__link:hover,
+.nav__link:focus {
+    color: #ccc;
+}
+
+.nav__link:hover::after,
+.nav__link:focus::after {
+    transform: scaleX(1);
+    transform-origin: left;
+}
+
+.nav__link_active {
+    color: #212121;
+    font-weight: 500;
+    transform: scaleX(1);
+}
