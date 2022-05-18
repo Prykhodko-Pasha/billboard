@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+// import { useDispatch } from "react-redux";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import IconButton from "@mui/material/IconButton";
@@ -13,10 +13,10 @@ import OutlinedInput from "@mui/material/OutlinedInput";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
-import * as authOperations from "../../redux/auth/auth-operations";
+// import * as authOperations from "../../redux/auth/auth-operations";
 
 export default function Registratoin() {
-  const dispatch = useDispatch();
+  // // const dispatch = useDispatch();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -41,7 +41,7 @@ export default function Registratoin() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(authOperations.register({ name, email, password }));
+    // dispatch(authOperations.register({ name, email, password }));
     setName("");
     setEmail("");
     setPassword("");
