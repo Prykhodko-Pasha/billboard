@@ -2,8 +2,11 @@ import Head from "next/head";
 import Image from "next/image";
 import AppBar from "../components/AppBar";
 import styles from "../styles/Home.module.css";
+import { getAllUsers } from "../prisma/user";
 
-export default function Home() {
+export default function Home({ allUsers }) {
+  // const allUsers = props.allUsers;
+
   return (
     <div className={styles.container}>
       <Head>
@@ -20,8 +23,8 @@ export default function Home() {
 
         <div className={styles.grid}>
           <a href="https://nextjs.org/docs" className={styles.card}>
-            <h2>Documentation &rarr;</h2>
-            <p>Find in-depth information about Next.js features and API.</p>
+            <h2>{allUsers[0].name}</h2>
+            <p>{allUsers[0].email}</p>
           </a>
 
           <a href="https://nextjs.org/learn" className={styles.card}>
@@ -48,16 +51,19 @@ export default function Home() {
           </a>
         </div>
       </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://github.com/Prykhodko-Pasha"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          by Prykhodko-Pasha
-        </a>
-      </footer>
     </div>
   );
+}
+
+export async function getServerSideProps() {
+  const allUsers = await getAllUsers();
+  return {
+    props: {
+      allUsers: allUsers.map((user) => ({
+        ...user,
+        createdAt: user.updatedAt.toISOString(),
+        updatedAt: user.updatedAt.toISOString(),
+      })),
+    },
+  };
 }
