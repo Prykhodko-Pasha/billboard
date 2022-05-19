@@ -24,7 +24,7 @@ export default async function handle(req, res) {
       case "POST": {
         // Create a new user
         const { email, name, password } = req.body;
-        const user = await createUser(email, name, password);
+        const user = await createUser(name, email, password);
         return res.json(user);
       }
       case "PUT": {

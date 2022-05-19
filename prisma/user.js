@@ -14,11 +14,11 @@ export const getUser = async (id) => {
 };
 
 // CREATE
-export const createUser = async (email, name, password) => {
+export const createUser = async (name, email, password) => {
   const user = await prisma.user.create({
     data: {
-      email,
       name,
+      email,
       password,
       role: "User",
       token: null,
