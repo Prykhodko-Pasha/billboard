@@ -4,7 +4,7 @@ import {
   getAllUsers,
   getUser,
   updateUser,
-} from "../../prisma/user";
+} from "../../prisma/users";
 
 export default async function handle(req, res) {
   try {
@@ -21,12 +21,27 @@ export default async function handle(req, res) {
           return res.json(users);
         }
       }
+
       case "POST": {
+        // Fields validation
+        // const { error } = joiSchemaUser.validate(req.body);
+        // if (error)
+        //   return res.status(400).json({
+        //     message: error.details[0].message,
+        //   });
+
+        // Does user exist?
+        const user = await getUser(req.body.email);
+        if (user)
+          return res.status(409).json({
+            message: "Email in use",
+          });
+
         // Create a new user
-        const { email, name, password } = req.body;
-        const user = await createUser(name, email, password);
-        return res.json(user);
+        const newUser = await createUser(req.body);
+        return res.json(newUser);
       }
+
       case "PUT": {
         // Update an existing user
         const { id, ...updateData } = req.body;

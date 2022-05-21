@@ -1,4 +1,6 @@
 import prisma from "./prisma";
+import createToken from "../helpers/createToken";
+import hashPassword from "../helpers/hashPassword";
 
 // READ
 export const getAllUsers = async () => {
@@ -6,20 +8,22 @@ export const getAllUsers = async () => {
   return users;
 };
 
-export const getUser = async (id) => {
+export const getUser = async (email) => {
   const user = await prisma.user.findUnique({
-    where: { id },
+    where: { email },
   });
   return user;
 };
 
 // CREATE
-export const createUser = async (name, email, password) => {
+export const createUser = async (body) => {
+  const { name, email, password } = body;
+  const hasedPassword = hashPassword(password);
   const user = await prisma.user.create({
     data: {
       name,
       email,
-      password,
+      password: hasedPassword,
       role: "User",
       token: null,
     },

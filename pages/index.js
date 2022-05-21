@@ -1,7 +1,7 @@
 import Head from "next/head";
 import AppBar from "../components/AppBar";
 import styles from "../styles/Home.module.css";
-import { getAllUsers } from "../prisma/user";
+import { getAllUsers } from "../prisma/users";
 
 export default function Home({ allUsers }) {
   return (
