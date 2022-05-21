@@ -1,5 +1,5 @@
 import { useState } from "react";
-// import { useDispatch } from "react-redux";
+import Router from "next/router";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import IconButton from "@mui/material/IconButton";
@@ -12,14 +12,10 @@ import FormControl from "@mui/material/FormControl";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import Router from "next/router";
 
-// import { createUser } from "../prisma/user";
-
-// import * as authOperations from "../../redux/auth/auth-operations";
+import { addUserAPI } from "../services/users-api";
 
 export default function Registratoin() {
-  // // const dispatch = useDispatch();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -46,18 +42,14 @@ export default function Registratoin() {
     e.preventDefault();
     try {
       const body = { name, email, password };
-      await fetch(`/api/user`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      });
-      await Router.push("/");
+      await addUserAPI(body);
+      await Router.push("/login");
     } catch (error) {
       console.error(error);
     }
-    setName("");
-    setEmail("");
-    setPassword("");
+    // setName("");
+    // setEmail("");
+    // setPassword("");
   };
 
   const handleClickShowPassword = () => {

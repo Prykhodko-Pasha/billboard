@@ -1,6 +1,6 @@
 // import { useSelector } from "react-redux";
-import Navigation from "./Navigation";
-import AuthNav from "./AuthNav";
+import Navigation from "./navigation";
+import AuthNav from "./authNav";
 // import UserMenu from "../UserMenu/UserMenu";
 import s from "../styles/AppBar.module.css";
 // import { getIsLoggedIn } from "../../redux/auth/auth-selectors";
