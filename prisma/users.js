@@ -15,6 +15,13 @@ export const getUser = async (email) => {
   return user;
 };
 
+export const findUser = async (id) => {
+  const user = await prisma.user.findUnique({
+    where: { id },
+  });
+  return user;
+};
+
 // CREATE
 export const createUser = async (body) => {
   const { name, email, password } = body;
