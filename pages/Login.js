@@ -13,11 +13,13 @@ import OutlinedInput from "@mui/material/OutlinedInput";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { loginUserAPI } from "../services/users-api";
+import { useGlobalStateContext } from "../context/provider";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [globalState, setGlobalState] = useGlobalStateContext();
 
   const handleChange = (e) => {
     const { name, value } = e.currentTarget;
@@ -36,9 +38,13 @@ export default function LoginPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const body = { email, password };
-      await loginUserAPI(body);
-      await Router.push("/");
+      const credentials = { email, password };
+      const user = await loginUserAPI(credentials);
+      if (user.token) {
+        await setGlobalState(user);
+        console.log("globalState :>> ", globalState);
+        Router.push("/profile");
+      }
     } catch (error) {
       console.error(error);
     }

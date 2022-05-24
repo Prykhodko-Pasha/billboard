@@ -5,8 +5,10 @@ import {
   getUser,
   updateUser,
 } from "../../prisma/users";
+// import { useGlobalStateContext } from "../context/provider";
 
 export default async function handle(req, res) {
+  //   const [globalState, setGlobalState] = useGlobalStateContext();
   try {
     switch (req.method) {
       case "GET": {
@@ -32,10 +34,13 @@ export default async function handle(req, res) {
 
         // Does user exist?
         const user = await getUser(req.body.email);
-        if (user)
+        if (user) {
+          //   await setGlobalState({ error: "Email in use" });
+          console.log("Error is in globalState :>> ");
           return res.status(409).json({
             message: "Email in use",
           });
+        }
 
         // Create a new user
         const newUser = await createUser(req.body);
@@ -58,6 +63,7 @@ export default async function handle(req, res) {
         break;
     }
   } catch (error) {
+    console.log("error :>> ", error);
     return res.status(500).json({ ...error, message: error.message });
   }
 }
