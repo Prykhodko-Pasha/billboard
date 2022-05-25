@@ -4,9 +4,9 @@ import { findUser } from "../prisma/users";
 const { SECRET_KEY } = process.env;
 
 export default async function verifyToken(req) {
-  console.log("req :>> ", req);
   try {
     const { authorization } = req.headers;
+    // console.log("authorization :>> ", authorization);
     const [bearer, token] = authorization?.split(" ");
     const { id } = jwt.verify(token, SECRET_KEY);
     const user = await findUser(id);

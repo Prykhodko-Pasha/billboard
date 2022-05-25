@@ -12,8 +12,6 @@ import FormControl from "@mui/material/FormControl";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import { useGlobalStateContext } from "../context/provider";
-
 import { addUserAPI } from "../services/users-api";
 
 export default function Registratoin() {
@@ -21,7 +19,6 @@ export default function Registratoin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [globalState, setGlobalState] = useGlobalStateContext();
 
   const handleChange = (e) => {
     const { name, value } = e.currentTarget;
@@ -47,13 +44,8 @@ export default function Registratoin() {
       const user = await addUserAPI(credentials);
       if (user) await Router.push("/login");
     } catch (error) {
-      console.log("globalState :>> before", globalState);
-      await setGlobalState({ error: error.response.data.message });
-      console.log("globalState :>> after", globalState);
+      await setIsLoggedIn({ error: error.response.data.message });
     }
-    // setName("");
-    // setEmail("");
-    // setPassword("");
   };
 
   const handleClickShowPassword = () => {

@@ -1,28 +1,18 @@
-import { useGlobalStateContext } from "../context/provider";
-import Router from "next/router";
 import { useEffect, useState } from "react";
-import Cookies from "js-cookie";
+import Router from "next/router";
+import { getCookies } from "../helpers/cookies";
 
 export default function Profile() {
-  const [globalState, setGlobalState] = useGlobalStateContext();
-  const [user, setUser] = useState();
-
-  console.log("globalState :>> ", globalState);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
-    // if (!globalState) Router.push("/signup");
-    if (!Cookies.get("token")) Router.push("/login");
-    //   Cookies.get("token");
+    getCookies() ? setUser(getCookies()) : Router.push("/login");
   }, []);
 
   return (
     <div>
       My Profile
-      <div>{globalState?.name}</div>
+      <div>{user?.name}</div>
     </div>
   );
 }
-
-// Profile.getInitialProps = ({ req }) => {
-//   const cookies = parseCookies(req);
-// };

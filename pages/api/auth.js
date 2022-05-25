@@ -7,6 +7,7 @@ import {
 } from "../../prisma/users";
 import isPasswordMatching from "../../helpers/isPasswordMatching";
 import createToken from "../../helpers/createToken";
+import verifyToken from "../../helpers/verifyToken";
 
 export default async function handle(req, res) {
   try {
@@ -34,22 +35,25 @@ export default async function handle(req, res) {
         return res.json(loginedUser);
       }
 
-      //   case "PUT": {
-      //     // Update an existing user
-      //     const { id, ...updateData } = req.body;
-      //     const user = await updateUser(id, updateData);
-      //     return res.json(user);
-      //   }
-      //   case "DELETE": {
-      //     // Delete an existing user
-      //     const { id } = req.body;
-      //     const user = await deleteUser(id);
-      //     return res.json(user);
-      //   }
+      case "PATCH": {
+        // Fields validation
+        // const { error } = joiSchemaUser.validate(req.body);
+        // if (error)
+        //   return res.status(400).json({
+        //     message: error.details[0].message,
+        //   });
+
+        // Token verifying and updating
+        const { id, ...userData } = await verifyToken(req);
+        const updateData = { ...userData, token: null };
+        await updateUser(id, updateData);
+        return res.status(204).send();
+      }
+
       default:
         break;
     }
   } catch (error) {
-    return res.status(500).json({ ...error, message: error.message });
+    return res.status(error.status).json({ ...error, message: error.message });
   }
 }

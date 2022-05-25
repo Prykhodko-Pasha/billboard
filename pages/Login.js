@@ -13,15 +13,14 @@ import OutlinedInput from "@mui/material/OutlinedInput";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { loginUserAPI } from "../services/users-api";
-import { useGlobalStateContext } from "../context/provider";
-import { setBearerToken } from "../helpers/axiosHeaders";
-import Cookies from "js-cookie";
+import { useIsLoggedInContext } from "../context/provider";
+import { setCookies } from "../helpers/cookies";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [globalState, setGlobalState] = useGlobalStateContext();
+  const [isLoggedIn, setIsLoggedIn] = useIsLoggedInContext();
 
   const handleChange = (e) => {
     const { name, value } = e.currentTarget;
@@ -43,9 +42,8 @@ export default function LoginPage() {
       const credentials = { email, password };
       const user = await loginUserAPI(credentials);
       if (user.token) {
-        await setGlobalState({ ...user, isLoggedIn: true });
-        setBearerToken(user.token);
-        Cookies.set("token", user.token);
+        setIsLoggedIn(true);
+        setCookies(user);
         Router.push("/profile");
       }
     } catch (error) {

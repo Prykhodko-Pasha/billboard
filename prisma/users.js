@@ -1,5 +1,4 @@
 import prisma from "./prisma";
-import createToken from "../helpers/createToken";
 import hashPassword from "../helpers/hashPassword";
 
 // READ
@@ -40,7 +39,6 @@ export const createUser = async (body) => {
 
 // UPDATE
 export const updateUser = async (id, updateData) => {
-  console.log("id :>> ", id);
   const user = await prisma.user.update({
     where: {
       id,
@@ -49,7 +47,6 @@ export const updateUser = async (id, updateData) => {
       ...updateData,
     },
   });
-  console.log("user :>> ", user);
   return user;
 };
 
