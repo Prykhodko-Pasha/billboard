@@ -1,5 +1,6 @@
 .app_bar {
     width: 100%;
+    height: 48px;
     display: flex;
     justify-content: space-between;
 }

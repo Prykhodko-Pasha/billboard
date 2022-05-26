@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Router from "next/router";
 import { getCookies } from "../helpers/cookies";
+import Avatar from "@mui/material/Avatar";
 
 export default function Profile() {
   const [user, setUser] = useState(null);
@@ -11,7 +12,7 @@ export default function Profile() {
 
   return (
     <div>
-      My Profile
+      {/* <Avatar alt="me" src="../public/avatar.png" /> */}
       <div>{user?.name}</div>
     </div>
   );

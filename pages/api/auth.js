@@ -54,6 +54,8 @@ export default async function handle(req, res) {
         break;
     }
   } catch (error) {
-    return res.status(error.status).json({ ...error, message: error.message });
+    return res
+      .isLoggedIn(error.isLoggedIn)
+      .json({ ...error, message: error.message });
   }
 }

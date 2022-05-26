@@ -42,10 +42,19 @@ export default function LoginPage() {
       const credentials = { email, password };
       const user = await loginUserAPI(credentials);
       if (user.token) {
-        setIsLoggedIn(true);
+        await setIsLoggedIn(true);
         setCookies(user);
         Router.push("/profile");
       }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleRegistration = async (e) => {
+    e.preventDefault();
+    try {
+      Router.push("/signup");
     } catch (error) {
       console.error(error);
     }
@@ -140,10 +149,23 @@ export default function LoginPage() {
             sx={{
               margin: "0 auto",
               mt: 3,
-              mb: 2,
+              // mb: 2,
             }}
           >
             Login
+          </Button>
+          <Button
+            // type="text"
+            variant="outlined"
+            size="large"
+            sx={{
+              margin: "0 auto",
+              mt: 3,
+              mb: 2,
+            }}
+            onClick={handleRegistration}
+          >
+            Registration
           </Button>
         </Box>
       </Box>

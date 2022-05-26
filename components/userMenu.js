@@ -6,12 +6,13 @@ import { logoutUserAPI } from "../services/users-api";
 import { useIsLoggedInContext } from "../context/provider";
 import s from "../styles/UserMenu.module.css";
 
-export default function UserMenu({ name }) {
+export default function UserMenu({ name, setActiveLink }) {
   const [isLoggedIn, setIsLoggedIn] = useIsLoggedInContext();
 
   const handleLogout = async (e) => {
     try {
       await logoutUserAPI();
+      await setActiveLink("/login");
       await setIsLoggedIn(false);
       Router.push("/login");
     } catch (error) {

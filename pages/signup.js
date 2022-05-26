@@ -48,6 +48,15 @@ export default function Registratoin() {
     }
   };
 
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    try {
+      Router.push("/login");
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
   };
@@ -148,10 +157,21 @@ export default function Registratoin() {
             sx={{
               margin: "0 auto",
               mt: 3,
-              mb: 2,
             }}
           >
             Register
+          </Button>
+          <Button
+            variant="outlined"
+            size="large"
+            sx={{
+              margin: "0 auto",
+              mt: 3,
+              mb: 2,
+            }}
+            onClick={handleLogin}
+          >
+            Login
           </Button>
         </Box>
       </Box>

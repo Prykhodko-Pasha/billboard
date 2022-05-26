@@ -1,12 +1,33 @@
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import s from "../styles/Navigation.module.css";
 
-export default function Navigation() {
+export default function Navigation({ isLoggedIn, activeLink, setActiveLink }) {
+  const [isLog, setIsLog] = useState(false);
+  useEffect(() => setIsLog(isLoggedIn), [isLoggedIn]);
+
   return (
     <nav className={s.nav}>
       <Link href="/">
-        <a className={s.nav__link}>Billboard</a>
+        <a
+          className={activeLink === "/" ? s.nav__link_active : s.nav__link}
+          onClick={async () => await setActiveLink("/")}
+        >
+          Billboard
+        </a>
       </Link>
+      {isLog && (
+        <Link href="/profile">
+          <a
+            className={
+              activeLink === "/profile" ? s.nav__link_active : s.nav__link
+            }
+            onClick={() => setActiveLink("/profile")}
+          >
+            Profile
+          </a>
+        </Link>
+      )}
     </nav>
   );
 }

@@ -15,7 +15,7 @@ export default async function verifyToken(req) {
 
     return user;
   } catch (error) {
-    error.status = 401;
+    error.isLoggedIn = 401;
     error.message = "Not authorized";
     return error;
   }
