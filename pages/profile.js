@@ -8,13 +8,30 @@ import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import AddIcon from "@mui/icons-material/Add";
 import Button from "@mui/material/Button";
+import { getUserBillsAPI } from "../services/bills-api";
+import BillsList from "../components/billsList";
 
 export default function Profile() {
   const [user, setUser] = useState(null);
+  const [bills, setBills] = useState(null);
 
   useEffect(() => {
     getCookies() ? setUser(getCookies()) : Router.push("/login");
   }, []);
+
+  useEffect(() => {
+    try {
+      fetchUserBills(user.id);
+    } catch (error) {
+      console.log("error:>> ", error);
+    }
+  }, [user]);
+
+  const fetchUserBills = async (id) => {
+    const body = { userId: id };
+    const userBills = await getUserBillsAPI(body);
+    setBills(userBills.reverse());
+  };
 
   const handleNewBill = async (e) => {
     e.preventDefault();
@@ -64,6 +81,8 @@ export default function Profile() {
       >
         Create a bill
       </Button>
+      <div>My bills</div>
+      <BillsList bills={bills} />
     </>
   );
 }

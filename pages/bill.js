@@ -5,7 +5,8 @@ import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-// import { addUserAPI } from "../services/users-api";
+import { addBillAPI } from "../services/bills-api";
+import { getCookies } from "../helpers/cookies";
 
 export default function Registratoin() {
   const [title, setTitle] = useState("");
@@ -28,7 +29,8 @@ export default function Registratoin() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const credentials = { title, text };
+      const authorId = getCookies("user").id;
+      const credentials = { title, text, authorId };
       const bill = await addBillAPI(credentials);
       if (bill) await Router.push("/profile");
     } catch (error) {
