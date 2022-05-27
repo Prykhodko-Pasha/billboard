@@ -3,9 +3,16 @@ import prisma from "./prisma";
 
 // READ
 export const getAllBills = async () => {
-  const bills = await prisma.bill.findMany({});
+  const bills = await prisma.bill.findMany({
+    select: {
+      title: true,
+      text: true,
+      author: { select: { email: true } },
+    },
+  });
   return bills;
 };
+
 export const getUserBills = async (userId) => {
   const bills = await prisma.bill.findMany({
     where: { authorId: userId },

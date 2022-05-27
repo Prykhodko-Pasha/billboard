@@ -10,6 +10,7 @@ export default async function handle(req, res) {
   try {
     switch (req.method) {
       case "GET": {
+        console.log("api bill req :>> ", req);
         if (req.query.userId) {
           // Get a single user if id is provided is the query
           // api/users?id=1

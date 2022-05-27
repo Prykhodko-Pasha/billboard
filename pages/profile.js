@@ -8,6 +8,7 @@ import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import AddIcon from "@mui/icons-material/Add";
 import Button from "@mui/material/Button";
+import Divider from "@mui/material/Divider";
 import { getUserBillsAPI } from "../services/bills-api";
 import BillsList from "../components/billsList";
 
@@ -81,7 +82,14 @@ export default function Profile() {
       >
         Create a bill
       </Button>
-      <div>My bills</div>
+      <Divider sx={{ width: "100%", margin: "20px 0" }} />
+      <Typography
+        variant="h4"
+        align="left"
+        sx={{ color: "#ccc", textTransform: "uppercase", margin: "20px 0" }}
+      >
+        My bills
+      </Typography>
       <BillsList bills={bills} />
     </>
   );
