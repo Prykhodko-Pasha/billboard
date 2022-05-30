@@ -5,10 +5,10 @@ import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import { addBillAPI } from "../services/bills-api";
-import { getCookies } from "../helpers/cookies";
+import { addBillAPI } from "../../services/bills-api";
+import { getCookies } from "../../helpers/cookies";
 
-export default function Registratoin() {
+export default function Bill() {
   const [title, setTitle] = useState("");
   const [text, setText] = useState("");
 
@@ -36,23 +36,6 @@ export default function Registratoin() {
     } catch (error) {
       await setIsLoggedIn({ error: error.response.data.message });
     }
-  };
-
-  //   const handleLogin = async (e) => {
-  //     e.preventDefault();
-  //     try {
-  //       Router.push("/login");
-  //     } catch (error) {
-  //       console.error(error);
-  //     }
-  //   };
-
-  const handleClickShowPassword = () => {
-    setShowPassword(!showPassword);
-  };
-
-  const handleMouseDownPassword = (e) => {
-    e.preventDefault();
   };
 
   return (
@@ -115,32 +98,6 @@ export default function Registratoin() {
             rows={8}
             onChange={handleChange}
           />
-
-          {/* <FormControl margin="normal" variant="outlined" fullWidth required>
-            <InputLabel htmlFor="outlined-adornment-password">
-              Password
-            </InputLabel>
-            <OutlinedInput
-              id="outlined-adornment-password"
-              type={showPassword ? "text" : "password"}
-              name="password"
-              value={password}
-              onChange={handleChange}
-              endAdornment={
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label="toggle password visibility"
-                    onClick={handleClickShowPassword}
-                    onMouseDown={handleMouseDownPassword}
-                    edge="end"
-                  >
-                    {showPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-              }
-              label="Password_"
-            />
-          </FormControl> */}
 
           <Button
             type="submit"

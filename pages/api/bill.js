@@ -2,7 +2,7 @@ import {
   createBill,
   getUserBills,
   getAllBills,
-  //   getUser,
+  updateBill,
   //   updateUser,
 } from "../../prisma/bills";
 
@@ -10,7 +10,7 @@ export default async function handle(req, res) {
   try {
     switch (req.method) {
       case "GET": {
-        console.log("api bill req :>> ", req);
+        // console.log("api bill req :>> ", req);
         if (req.query.userId) {
           // Get a single user if id is provided is the query
           // api/users?id=1
@@ -36,12 +36,13 @@ export default async function handle(req, res) {
         return res.json(newBill);
       }
 
-      //   case "PUT": {
-      //     // Update an existing user
-      //     const { id, ...updateData } = req.body;
-      //     const user = await updateUser(id, updateData);
-      //     return res.json(user);
-      //   }
+      case "PATCH": {
+        // Update an existing user
+        console.log("req.body PATCH:>> ", req.body);
+        const { id, ...updateData } = req.body;
+        const bill = await updateBill(id, updateData);
+        return res.json(bill);
+      }
 
       //   case "DELETE": {
       //     // Delete an existing user

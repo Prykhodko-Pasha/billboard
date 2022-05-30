@@ -5,6 +5,7 @@ import prisma from "./prisma";
 export const getAllBills = async () => {
   const bills = await prisma.bill.findMany({
     select: {
+      id: true,
       title: true,
       text: true,
       author: { select: { email: true } },
@@ -16,9 +17,6 @@ export const getAllBills = async () => {
 export const getUserBills = async (userId) => {
   const bills = await prisma.bill.findMany({
     where: { authorId: userId },
-    // orderBy: {
-    //   title: "asc",
-    // },
   });
   return bills;
 };
@@ -26,6 +24,12 @@ export const getUserBills = async (userId) => {
 export const getBill = async (id) => {
   const bill = await prisma.bill.findUnique({
     where: { id },
+    select: {
+      id: true,
+      title: true,
+      text: true,
+      //   author: { select: { email: true } },
+    },
   });
   return bill;
 };

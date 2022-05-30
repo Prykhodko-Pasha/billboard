@@ -14,7 +14,7 @@ export default async function handle(req, res) {
           // Get a single user if id is provided is the query
           // api/users?id=1
           const user = await getUser(req.query.id);
-          return res.status(200).json(user);
+          return res.json(user);
         } else {
           // Otherwise, fetch all users
           const users = await getAllUsers();

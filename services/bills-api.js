@@ -16,6 +16,13 @@ export async function addBillAPI(body) {
   const { data } = await axios.post("/api/bill", body);
   return data;
 }
+
+export async function updateBillAPI(body) {
+  console.log("billId getBillAPI:>> ", body);
+  const { data } = await axios.patch(`/api/bill`, body);
+  return data;
+}
+
 // export async function loginBillAPI(body) {
 //   const { data } = await axios.put("/api/auth", body);
 //   const { password, ...BillData } = data;

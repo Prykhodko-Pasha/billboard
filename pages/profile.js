@@ -22,7 +22,7 @@ export default function Profile() {
 
   useEffect(() => {
     try {
-      fetchUserBills(user.id);
+      fetchUserBills(user?.id);
     } catch (error) {
       console.log("error:>> ", error);
     }
@@ -37,7 +37,7 @@ export default function Profile() {
   const handleNewBill = async (e) => {
     e.preventDefault();
     try {
-      Router.push("/bill");
+      Router.push("/edit");
     } catch (error) {
       console.error(error);
     }
