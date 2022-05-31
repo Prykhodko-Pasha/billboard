@@ -21,16 +21,16 @@ export default function Profile() {
   }, []);
 
   useEffect(() => {
-    try {
-      fetchUserBills(user?.id);
-    } catch (error) {
-      console.log("error:>> ", error);
-    }
+    if (user)
+      try {
+        fetchUserBills(user?.id);
+      } catch (error) {
+        console.log("error:>> ", error);
+      }
   }, [user]);
 
-  const fetchUserBills = async (id) => {
-    const body = { userId: id };
-    const userBills = await getUserBillsAPI(body);
+  const fetchUserBills = async (userId) => {
+    const userBills = await getUserBillsAPI(userId);
     setBills(userBills.reverse());
   };
 

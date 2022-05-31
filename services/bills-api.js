@@ -1,14 +1,17 @@
 import axios from "axios";
 
 export async function getAllBillsAPI() {
-  console.log("body getAllBillsAPI:>> ");
+  //   console.log("body getAllBillsAPI:>> ");
   const { data } = await axios.get("/api/bill");
-  console.log("data :>> ", data);
+  //   console.log("data :>> ", data);
   return data;
 }
 
-export async function getUserBillsAPI(body) {
-  const { data } = await axios.get("/api/bill", body);
+export async function getUserBillsAPI(userId) {
+  //   console.log("body getUserBillsAPI:>> ", body);
+  const { data } = await axios.get("/api/bill", {
+    params: { userId },
+  });
   return data;
 }
 
@@ -18,7 +21,13 @@ export async function addBillAPI(body) {
 }
 
 export async function updateBillAPI(body) {
-  console.log("billId getBillAPI:>> ", body);
+  //   console.log("billId getBillAPI:>> ", body);
+  const { data } = await axios.patch(`/api/bill`, body);
+  return data;
+}
+
+export async function deleteBillAPI(body) {
+  //   console.log("billId getBillAPI:>> ", body);
   const { data } = await axios.patch(`/api/bill`, body);
   return data;
 }

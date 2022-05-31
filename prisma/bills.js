@@ -8,7 +8,7 @@ export const getAllBills = async () => {
       id: true,
       title: true,
       text: true,
-      author: { select: { email: true } },
+      author: { select: { id: true, email: true } },
     },
   });
   return bills;
@@ -17,6 +17,12 @@ export const getAllBills = async () => {
 export const getUserBills = async (userId) => {
   const bills = await prisma.bill.findMany({
     where: { authorId: userId },
+    select: {
+      id: true,
+      title: true,
+      text: true,
+      author: { select: { id: true, email: true } },
+    },
   });
   return bills;
 };
@@ -34,12 +40,12 @@ export const getBill = async (id) => {
   return bill;
 };
 
-// export const findbill = async (id) => {
-//   const bill = await prisma.bill.findUnique({
-//     where: { id },
-//   });
-//   return bill;
-// };
+export const findbill = async (id) => {
+  const bill = await prisma.bill.findUnique({
+    where: { id },
+  });
+  return bill;
+};
 
 // CREATE
 export const createBill = async (body) => {
