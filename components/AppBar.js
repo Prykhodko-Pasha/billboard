@@ -4,36 +4,27 @@ import Navigation from "./navigation";
 import AuthNav from "./authNav";
 import UserMenu from "./userMenu";
 import s from "../styles/AppBar.module.css";
-import { getCookies, clearCookies } from "../helpers/cookies";
-import { useIsLoggedInContext } from "../context/provider";
-import { setBearerToken, unsetBearerToken } from "../helpers/axiosHeaders";
+import { useUserContext } from "../context/provider";
 
 export default function AppBar() {
-  const [user, setUser] = useState(null);
-  const [isLoggedIn, setIsLoggedIn] = useIsLoggedInContext();
+  const [user, setUser] = useUserContext();
   const [activeLink, setActiveLink] = useState("");
   useEffect(() => {
     setActiveLink(Router.pathname);
   }, []);
 
   useEffect(() => {
-    if (isLoggedIn) {
+    if (user) {
       Router.pathname === "/" ? setActiveLink("/") : setActiveLink("/profile");
-      const userData = getCookies();
-      setUser(userData);
-      setBearerToken(userData.token);
     } else {
       setActiveLink("/login");
-      setUser(null);
-      unsetBearerToken();
-      clearCookies();
     }
-  }, [isLoggedIn]);
+  }, [user]);
 
   return (
     <div className={s.app_bar}>
       <Navigation
-        isLoggedIn={isLoggedIn}
+        user={user}
         activeLink={activeLink}
         setActiveLink={setActiveLink}
       />

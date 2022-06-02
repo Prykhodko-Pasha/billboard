@@ -13,14 +13,14 @@ import OutlinedInput from "@mui/material/OutlinedInput";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { loginUserAPI } from "../services/users-api";
-import { useIsLoggedInContext } from "../context/provider";
+import { useUserContext } from "../context/provider";
 import { setCookies } from "../helpers/cookies";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useIsLoggedInContext();
+  const [user, setUser] = useUserContext();
 
   const handleChange = (e) => {
     const { name, value } = e.currentTarget;
@@ -41,9 +41,9 @@ export default function LoginPage() {
     try {
       const credentials = { email, password };
       const user = await loginUserAPI(credentials);
-      if (user.token) {
-        await setIsLoggedIn(true);
-        setCookies(user);
+      if (user) {
+        await setUser(user);
+        setCookies(user.token);
         Router.push("/profile");
       }
     } catch (error) {

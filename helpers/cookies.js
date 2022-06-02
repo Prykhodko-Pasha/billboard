@@ -1,13 +1,16 @@
 import Cookies from "js-cookie";
+import { setBearerToken, unsetBearerToken } from "./axiosHeaders";
 
-export function setCookies(user) {
-  Cookies.set("user", JSON.stringify(user), { expires: 1 });
+export function setCookies(token) {
+  Cookies.set("token", JSON.stringify(token), { expires: 1 });
+  setBearerToken(token);
 }
 
 export function getCookies() {
-  return Cookies.get("user") ? JSON.parse(Cookies.get("user")) : null;
+  return Cookies.get("token") ? JSON.parse(Cookies.get("token")) : null;
 }
 
 export function clearCookies() {
-  Cookies.remove("user");
+  Cookies.remove("token");
+  unsetBearerToken();
 }

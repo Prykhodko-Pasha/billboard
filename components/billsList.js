@@ -7,17 +7,12 @@ import EditIcon from "@mui/icons-material/Edit";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Link from "next/link";
-import { getCookies } from "../helpers/cookies";
 import isAllowedEditing from "../helpers/isAllowedEditing";
-import { useEffect, useState } from "react";
 import { deleteBillAPI } from "../services/bills-api";
+import { useUserContext } from "../context/provider";
 
 export default function BillsList({ bills }) {
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    getCookies() ? setUser(getCookies()) : setUser({ id: null, role: null });
-  }, []);
+  const [user, setUser] = useUserContext();
 
   const handleDelete = async (billId) => {
     try {
@@ -31,7 +26,6 @@ export default function BillsList({ bills }) {
   };
 
   return (
-    user &&
     Array.isArray(bills) && (
       <Box sx={{ width: "95%", margin: "0px" }}>
         <Grid container spacing={2}>
@@ -67,7 +61,7 @@ export default function BillsList({ bills }) {
                         <Typography variant="h5" align="left">
                           {title}
                         </Typography>
-                        {isAllowedEditing(author.id, user.id, user.role) && (
+                        {isAllowedEditing(author.id, user?.id, user?.role) && (
                           <div>
                             <Link href={`/edit/${id}`}>
                               <IconButton

@@ -35,7 +35,7 @@ export default function Bill(data) {
       const bill = await updateBillAPI(credentials);
       if (bill) Router.back();
     } catch (error) {
-      // await setIsLoggedIn({ error: error.response.data.message });
+      // await setUser({ error: error.response.data.message });
       console.log("error :>> ", error);
     }
   };

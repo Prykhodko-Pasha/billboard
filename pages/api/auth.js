@@ -1,17 +1,35 @@
 import {
   createUser,
   deleteUser,
+  findUser,
   getAllUsers,
   getUser,
   updateUser,
 } from "../../prisma/users";
 import isPasswordMatching from "../../helpers/isPasswordMatching";
-import createToken from "../../helpers/createToken";
-import verifyToken from "../../helpers/verifyToken";
+import { createToken, verifyToken } from "../../helpers/tokenOperations";
 
 export default async function handle(req, res) {
   try {
     switch (req.method) {
+      case "GET": {
+        // Fields validation
+        // const { error } = joiSchemaUser.validate(req.body);
+        // if (error)
+        //   return res.status(400).json({
+        //     message: error.details[0].message,
+        //   });
+
+        // Token verifying
+        const user = await verifyToken(req);
+        // console.log("user :>> ", user);
+        if (!user)
+          return res.status(401).json({
+            message: "Unauthorized",
+          });
+        return res.json(user);
+      }
+
       case "PUT": {
         // Fields validation
         // const { error } = joiSchemaUser.validate(req.body);
@@ -22,7 +40,8 @@ export default async function handle(req, res) {
 
         // Is password matching?
         const { email, password } = req.body;
-        const user = await getUser(email);
+        const user = await findUser(email);
+        // console.log("user AUTH:>> ", user);
         if (!user || !isPasswordMatching(password, user.password))
           return res.status(401).json({
             message: "Email or password is wrong",
@@ -44,6 +63,7 @@ export default async function handle(req, res) {
         //   });
 
         // Token verifying and updating
+        console.log("req api auth:>> ", req);
         const { id, ...userData } = await verifyToken(req);
         const updateData = { ...userData, token: null };
         await updateUser(id, updateData);
@@ -54,8 +74,6 @@ export default async function handle(req, res) {
         break;
     }
   } catch (error) {
-    return res
-      .isLoggedIn(error.isLoggedIn)
-      .json({ ...error, message: error.message });
+    return res.status(error.status).json({ ...error, message: error.message });
   }
 }

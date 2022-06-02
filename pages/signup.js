@@ -44,7 +44,7 @@ export default function Registratoin() {
       const user = await addUserAPI(credentials);
       if (user) await Router.push("/login");
     } catch (error) {
-      await setIsLoggedIn({ error: error.response.data.message });
+      await setUser({ error: error.response.data.message });
     }
   };
 

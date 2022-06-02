@@ -9,20 +9,19 @@ export default function AuthNav({ activeLink, setActiveLink }) {
           className={activeLink === "/login" ? s.nav__link_active : s.nav__link}
           onClick={() => setActiveLink("/login")}
         >
-          Login / Sign up
+          Login
         </a>
       </Link>
-
-      {/* {activeLink === "/login" && (
-        <Link href="/login">
-          <a className={s.nav__link_active}>Login</a>
-        </Link>
-      )}
-      {activeLink === "/signup" && (
-        <Link href="/signup">
-          <a className={s.nav__link_active}>Registration</a>
-        </Link>
-      )} */}
+      <Link href="/signup">
+        <a
+          className={
+            activeLink === "/signup" ? s.nav__link_active : s.nav__link
+          }
+          onClick={() => setActiveLink("/signup")}
+        >
+          Sign up
+        </a>
+      </Link>
     </nav>
   );
 }

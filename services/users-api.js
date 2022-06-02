@@ -1,16 +1,19 @@
 import axios from "axios";
 
-// export async function fetchUsersAPI() {
-//   const { data } = await axios.get("/api/user");
-//   return data;
-// }
+export async function getUserAPI() {
+  const { data } = await axios.get("/api/auth");
+  console.log("data getUserAPI:>> ", data);
+  return data;
+}
 
 export async function addUserAPI(body) {
   const { data } = await axios.post("/api/user", body);
   return data;
 }
 export async function loginUserAPI(body) {
+  // console.log("body loginUserAPI:>> ", body);
   const { data } = await axios.put("/api/auth", body);
+  // console.log("data loginUserAPI:>> ", data);
   const { password, ...userData } = data;
   return userData;
 }

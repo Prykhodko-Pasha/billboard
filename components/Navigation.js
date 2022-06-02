@@ -2,9 +2,9 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import s from "../styles/Navigation.module.css";
 
-export default function Navigation({ isLoggedIn, activeLink, setActiveLink }) {
+export default function Navigation({ user, activeLink, setActiveLink }) {
   const [isLog, setIsLog] = useState(false);
-  useEffect(() => setIsLog(isLoggedIn), [isLoggedIn]);
+  useEffect(() => setIsLog(user), [user]);
 
   return (
     <nav className={s.nav}>

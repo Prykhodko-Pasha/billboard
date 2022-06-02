@@ -3,17 +3,19 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import stringAvatar from "../helpers/stringAvatar";
 import { logoutUserAPI } from "../services/users-api";
-import { useIsLoggedInContext } from "../context/provider";
+import { useUserContext } from "../context/provider";
 import s from "../styles/UserMenu.module.css";
+import { clearCookies } from "../helpers/cookies";
 
 export default function UserMenu({ name, setActiveLink }) {
-  const [isLoggedIn, setIsLoggedIn] = useIsLoggedInContext();
+  const [user, setUser] = useUserContext();
 
   const handleLogout = async (e) => {
     try {
       await logoutUserAPI();
       await setActiveLink("/login");
-      await setIsLoggedIn(false);
+      await setUser(null);
+      clearCookies();
       Router.push("/login");
     } catch (error) {
       console.error(error);

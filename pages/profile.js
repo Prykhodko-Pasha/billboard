@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import Router from "next/router";
-import { getCookies } from "../helpers/cookies";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -11,19 +10,16 @@ import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
 import { getUserBillsAPI } from "../services/bills-api";
 import BillsList from "../components/billsList";
+import { useUserContext } from "../context/provider";
 
 export default function Profile() {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useUserContext();
   const [bills, setBills] = useState(null);
-
-  useEffect(() => {
-    getCookies() ? setUser(getCookies()) : Router.push("/login");
-  }, []);
 
   useEffect(() => {
     if (user)
       try {
-        fetchUserBills(user?.id);
+        fetchUserBills(user.id);
       } catch (error) {
         console.log("error:>> ", error);
       }

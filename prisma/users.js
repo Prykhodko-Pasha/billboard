@@ -7,16 +7,29 @@ export const getAllUsers = async () => {
   return users;
 };
 
-export const getUser = async (email) => {
+// export const getUser = async (email) => {
+//   const user = await prisma.user.findUnique({
+//     where: { email },
+//   });
+//   return user;
+// };
+export const getUser = async (param) => {
+  // console.log("param getUser:>> ", param);
   const user = await prisma.user.findUnique({
-    where: { email },
+    where: { ...param },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      role: true,
+    },
   });
   return user;
 };
 
-export const findUser = async (id) => {
+export const findUser = async (email) => {
   const user = await prisma.user.findUnique({
-    where: { id },
+    where: { email },
   });
   return user;
 };
@@ -33,6 +46,12 @@ export const createUser = async (body) => {
       role: "User",
       token: null,
     },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      role: true,
+    },
   });
   return user;
 };
@@ -45,6 +64,13 @@ export const updateUser = async (id, updateData) => {
     },
     data: {
       ...updateData,
+    },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      role: true,
+      token: true,
     },
   });
   return user;

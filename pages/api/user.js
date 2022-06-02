@@ -33,7 +33,7 @@ export default async function handle(req, res) {
         // Does user exist?
         const user = await getUser(req.body.email);
         if (user) {
-          //   await setIsLoggedIn({ error: "Email in use" });
+          //   await setUser({ error: "Email in use" });
           return res.status(409).json({
             message: "Email in use",
           });
