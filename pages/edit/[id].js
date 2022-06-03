@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Router from "next/router";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -7,11 +7,22 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { updateBillAPI } from "../../services/bills-api";
 import { getBill } from "../../prisma/bills";
+import { useUserContext } from "../../context/provider";
+import isAllowedEditing from "../../helpers/isAllowedEditing";
 
-export default function Bill(data) {
-  const { id, title: initTitle, text: initText } = data?.data;
+export default function Bill({ data }) {
+  const { id, title: initTitle, text: initText, author } = data;
+
+  const [user, setUser] = useUserContext();
   const [title, setTitle] = useState(initTitle || "");
   const [text, setText] = useState(initText || "");
+
+  useEffect(() => {
+    // if (!user) Router.push("/login");
+    user &&
+      !isAllowedEditing(author.id, user?.id, user?.role) &&
+      Router.push("/profile");
+  }, [user]);
 
   const handleChange = (e) => {
     const { name, value } = e.currentTarget;
@@ -114,6 +125,7 @@ export default function Bill(data) {
                 margin: "0 auto",
                 mt: 3,
               }}
+              onClick={() => Router.back()}
             >
               Cancel
             </Button>

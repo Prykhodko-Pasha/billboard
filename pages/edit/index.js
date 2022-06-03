@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Router from "next/router";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -6,9 +6,10 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { addBillAPI } from "../../services/bills-api";
-import { getCookies } from "../../helpers/cookies";
+import { useUserContext } from "../../context/provider";
 
 export default function Bill() {
+  const [user, setUser] = useUserContext();
   const [title, setTitle] = useState("");
   const [text, setText] = useState("");
 
@@ -29,12 +30,13 @@ export default function Bill() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const authorId = getCookies("user").id;
+      const authorId = user.id;
       const credentials = { title, text, authorId };
       const bill = await addBillAPI(credentials);
       if (bill) await Router.push("/profile");
     } catch (error) {
-      await setUser({ error: error.response.data.message });
+      console.log("error :>> ", error);
+      // await setUser({ error: error.response.data.message });
     }
   };
 

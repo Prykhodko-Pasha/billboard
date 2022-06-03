@@ -20,6 +20,13 @@ export function Provider({ children }) {
       case "/profile":
         !user && Router.replace("/login");
         break;
+      case "/edit":
+        !user && Router.replace("/login");
+        break;
+      case "/edit/[id]":
+        console.log("case :>> ");
+        !user && Router.replace("/login");
+        break;
       case "/login":
         user && Router.replace("/profile");
         break;
@@ -27,6 +34,7 @@ export function Provider({ children }) {
         user && Router.replace("/profile");
         break;
       default:
+        console.log("default :>> ");
         break;
     }
   }, [user, route]);

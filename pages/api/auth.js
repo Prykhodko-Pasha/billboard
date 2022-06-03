@@ -2,7 +2,7 @@ import {
   createUser,
   deleteUser,
   findUser,
-  getAllUsers,
+  // getAllUsers,
   getUser,
   updateUser,
 } from "../../prisma/users";

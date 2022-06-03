@@ -2,11 +2,18 @@ import axios from "axios";
 
 export async function getUserAPI() {
   const { data } = await axios.get("/api/auth");
-  console.log("data getUserAPI:>> ", data);
+  // console.log("data getUserAPI:>> ", data);
+  return data;
+}
+
+export async function getAllUsersAPI() {
+  const { data } = await axios.get("/api/user");
+  console.log("data getAllUsersAPI:>> ", data);
   return data;
 }
 
 export async function addUserAPI(body) {
+  console.log("body addUserAPI:>> ", body);
   const { data } = await axios.post("/api/user", body);
   return data;
 }

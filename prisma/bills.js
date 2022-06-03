@@ -34,7 +34,7 @@ export const getBill = async (id) => {
       id: true,
       title: true,
       text: true,
-      //   author: { select: { email: true } },
+      author: { select: { id: true, email: true } },
     },
   });
   return bill;

@@ -1,6 +1,8 @@
+import { verifyToken } from "../../helpers/tokenOperations";
 import {
   createUser,
   deleteUser,
+  findUser,
   getAllUsers,
   getUser,
   updateUser,
@@ -17,9 +19,17 @@ export default async function handle(req, res) {
           return res.json(user);
         } else {
           // Otherwise, fetch all users
-          const users = await getAllUsers();
+          const user = await verifyToken(req);
+          console.log("user GET:>> ", user);
+          if (!user)
+            return res.status(401).json({
+              message: "Unauthorized",
+            });
+          const users = await getAllUsers(user.role);
           return res.json(users);
         }
+
+        return res.json(user);
       }
 
       case "POST": {
@@ -31,7 +41,8 @@ export default async function handle(req, res) {
         //   });
 
         // Does user exist?
-        const user = await getUser(req.body.email);
+        console.log("req.body :>> ", req.body);
+        const user = await findUser(req.body.email);
         if (user) {
           //   await setUser({ error: "Email in use" });
           return res.status(409).json({
