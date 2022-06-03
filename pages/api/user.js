@@ -1,3 +1,4 @@
+import isAllowedEditing from "../../helpers/isAllowedEditing";
 import { verifyToken } from "../../helpers/tokenOperations";
 import {
   createUser,
@@ -63,10 +64,27 @@ export default async function handle(req, res) {
       }
 
       case "DELETE": {
-        // Delete an existing user
-        const { id } = req.body;
-        const user = await deleteUser(id);
-        return res.json(user);
+        // Verify token
+        const editor = await verifyToken(req);
+        if (!editor)
+          return res.status(401).json({
+            message: "Unauthorized",
+          });
+        const { id: editorId, role } = editor;
+        // Does user exist?
+        const { userId } = req.query;
+        const user = await getUser({ id: userId });
+        if (!user)
+          return res.status(404).json({
+            message: "User not found",
+          });
+        // Does editor have rights?
+        if (isAllowedEditing(editorId, userId, role)) {
+          await deleteUser(userId);
+          return res.json("User deleted");
+        } else {
+          return res.status(400).json("Not allowed");
+        }
       }
       default:
         break;

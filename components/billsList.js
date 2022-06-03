@@ -1,3 +1,5 @@
+import Link from "next/link";
+import Router from "next/router";
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -6,7 +8,6 @@ import Box from "@mui/material/Box";
 import EditIcon from "@mui/icons-material/Edit";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
-import Link from "next/link";
 import isAllowedEditing from "../helpers/isAllowedEditing";
 import { deleteBillAPI } from "../services/bills-api";
 import { useUserContext } from "../context/provider";
@@ -14,12 +15,11 @@ import { useUserContext } from "../context/provider";
 export default function BillsList({ bills }) {
   const [user, setUser] = useUserContext();
 
-  const handleDelete = async (billId) => {
+  const handleDelete = async (e) => {
     try {
-      const { id: userId, role } = user;
-      const credentials = { billId, userId, role };
-      const bill = await deleteBillAPI(credentials);
-      if (bill) await Router.push("/profile");
+      const billId = e.currentTarget.id;
+      const bill = await deleteBillAPI(billId);
+      if (bill) Router.reload();
     } catch (error) {
       console.error(error);
     }
@@ -39,6 +39,7 @@ export default function BillsList({ bills }) {
                 md={6}
                 lg={4}
                 key={index}
+                // id={id}
               >
                 <Card sx={{ height: "250px" }}>
                   <CardContent
@@ -88,7 +89,8 @@ export default function BillsList({ bills }) {
                                   color: "#fff",
                                 },
                               }}
-                              onClick={(id) => handleDelete(id)}
+                              id={id}
+                              onClick={(e) => handleDelete(e)}
                             >
                               <DeleteIcon />
                             </IconButton>

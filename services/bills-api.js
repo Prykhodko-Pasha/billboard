@@ -26,9 +26,11 @@ export async function updateBillAPI(body) {
   return data;
 }
 
-export async function deleteBillAPI(body) {
-  //   console.log("billId getBillAPI:>> ", body);
-  const { data } = await axios.patch(`/api/bill`, body);
+export async function deleteBillAPI(billId) {
+  // console.log("billId deleteBillAPI:>> ");
+  const { data } = await axios.delete(`/api/bill`, {
+    params: { billId },
+  });
   return data;
 }
 

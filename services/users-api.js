@@ -8,12 +8,12 @@ export async function getUserAPI() {
 
 export async function getAllUsersAPI() {
   const { data } = await axios.get("/api/user");
-  console.log("data getAllUsersAPI:>> ", data);
+  // console.log("data getAllUsersAPI:>> ", data);
   return data;
 }
 
 export async function addUserAPI(body) {
-  console.log("body addUserAPI:>> ", body);
+  // console.log("body addUserAPI:>> ", body);
   const { data } = await axios.post("/api/user", body);
   return data;
 }
@@ -28,7 +28,10 @@ export async function logoutUserAPI() {
   await axios.patch("/api/auth");
 }
 
-export async function delContactAPI(contactId) {
-  await axios.delete(`/contacts/${contactId}`);
-  return contactId;
+export async function deleteUserAPI(userId) {
+  // console.log("userId deleteUserAPI:>> ", userId);
+  const { data } = await axios.delete(`/api/user`, {
+    params: { userId },
+  });
+  return data;
 }

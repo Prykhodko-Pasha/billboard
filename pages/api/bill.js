@@ -1,3 +1,5 @@
+import isAllowedEditing from "../../helpers/isAllowedEditing";
+import { verifyToken } from "../../helpers/tokenOperations";
 import {
   createBill,
   getUserBills,
@@ -43,15 +45,26 @@ export default async function handle(req, res) {
       }
 
       case "DELETE": {
-        // Delete an existing bill
-        const { billId, userId, role } = req.body;
-        const bill = findbill(billId);
+        // console.log("bill DELETE :>> ");
+        // Verify token
+        const user = await verifyToken(req);
+        if (!user)
+          return res.status(401).json({
+            message: "Unauthorized",
+          });
+        const { id: userId, role } = user;
+        // Is bill existing?
+        // console.log("req.query :>> ", req.query);
+        const { billId } = req.query;
+        const bill = await findbill(billId);
+        // console.log("bill :>> ", bill);
         if (!bill)
           return res.status(404).json({
             message: "Bill not found",
           });
-        if (isAllowedEditing(bill.author.id, userId, role)) {
-          await deleteBill(id);
+        // Does user have rights?
+        if (isAllowedEditing(bill.authorId, userId, role)) {
+          await deleteBill(billId);
           return res.json("Bill deleted");
         } else {
           return res.status(400).json("Not allowed");
