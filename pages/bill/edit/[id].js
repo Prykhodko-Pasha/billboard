@@ -5,13 +5,24 @@ import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import { addBillAPI } from "../../services/bills-api";
-import { useUserContext } from "../../context/provider";
+import { updateBillAPI } from "../../../services/bills-api";
+import { getBill } from "../../../prisma/bills";
+import { useUserContext } from "../../../context/provider";
+import isAllowedEditing from "../../../helpers/isAllowedEditing";
 
-export default function Bill() {
+export default function EditBill({ data }) {
+  const { id, title: initTitle, text: initText, author } = data;
+
   const [user, setUser] = useUserContext();
-  const [title, setTitle] = useState("");
-  const [text, setText] = useState("");
+  const [title, setTitle] = useState(initTitle || "");
+  const [text, setText] = useState(initText || "");
+
+  useEffect(() => {
+    // if (!user) Router.push("/login");
+    user &&
+      !isAllowedEditing(author.id, user?.id, user?.role) &&
+      Router.push("/profile");
+  }, [user]);
 
   const handleChange = (e) => {
     const { name, value } = e.currentTarget;
@@ -30,13 +41,13 @@ export default function Bill() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const authorId = user.id;
-      const credentials = { title, text, authorId };
-      const bill = await addBillAPI(credentials);
-      if (bill) await Router.push("/profile");
+      // const authorId = getCookies("user").id;
+      const credentials = { id, title, text };
+      const bill = await updateBillAPI(credentials);
+      if (bill) Router.back();
     } catch (error) {
-      console.log("error :>> ", error);
       // await setUser({ error: error.response.data.message });
+      console.log("error :>> ", error);
     }
   };
 
@@ -100,20 +111,50 @@ export default function Bill() {
             rows={8}
             onChange={handleChange}
           />
-
-          <Button
-            type="submit"
-            variant="contained"
-            size="large"
+          <Box
             sx={{
-              margin: "0 auto",
-              mt: 3,
+              width: "100%",
+              display: "flex",
+              justifyContent: "space-between",
             }}
           >
-            Create
-          </Button>
+            <Button
+              variant="outlined"
+              size="large"
+              sx={{
+                margin: "0 auto",
+                mt: 3,
+              }}
+              onClick={() => Router.back()}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              variant="contained"
+              size="large"
+              sx={{
+                margin: "0 auto",
+                mt: 3,
+              }}
+            >
+              Save
+            </Button>
+          </Box>
         </Box>
       </Box>
     </Container>
   );
+}
+
+export async function getServerSideProps(context) {
+  const { params } = context;
+  const { id } = params;
+  if (!id) return null;
+  const billData = await getBill(id);
+  return {
+    props: {
+      data: billData,
+    },
+  };
 }

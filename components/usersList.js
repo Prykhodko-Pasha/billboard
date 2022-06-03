@@ -27,7 +27,7 @@ export default function UsersList({ users }) {
 
   return (
     Array.isArray(users) && (
-      <Box sx={{ width: "95%", margin: "0px" }}>
+      <Box sx={{ width: "95%", margin: "0 auto" }}>
         <Grid container spacing={2}>
           {users.map((user, index) => {
             const { id, name, email, role } = user;
@@ -40,82 +40,88 @@ export default function UsersList({ users }) {
                 lg={4}
                 key={index}
               >
-                <Card
-                  sx={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    minWidth: 251,
-                  }}
-                >
-                  <Box sx={{ display: "flex", flexDirection: "column" }}>
-                    <CardContent
-                      sx={{
-                        flex: "1 0 auto",
-                        display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "space-between",
-                      }}
-                    >
-                      <div>
-                        <Typography component="div" variant="h5">
-                          {name}
-                        </Typography>
-                        <Typography
-                          variant="subtitle1"
-                          color="text.secondary"
-                          component="div"
-                        >
-                          {role}
-                        </Typography>
-                        <Typography
-                          variant="subtitle1"
-                          color="text.secondary"
-                          component="div"
-                        >
-                          {email}
-                        </Typography>
-                      </div>
-                      <div>
-                        <Link href={`/edit/${id}`}>
+                <Link href={`/user/${id}`}>
+                  <Card
+                    sx={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      minWidth: 251,
+                      cursor: "pointer",
+                      "&:hover": {
+                        boxShadow: "0px 10px 20px 2px rgba(0, 0, 0, 0.25)",
+                      },
+                    }}
+                  >
+                    <Box sx={{ display: "flex", flexDirection: "column" }}>
+                      <CardContent
+                        sx={{
+                          flex: "1 0 auto",
+                          display: "flex",
+                          flexDirection: "column",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <div>
+                          <Typography component="div" variant="h5">
+                            {name}
+                          </Typography>
+                          <Typography
+                            variant="subtitle1"
+                            color="text.secondary"
+                            component="div"
+                          >
+                            {role}
+                          </Typography>
+                          <Typography
+                            variant="subtitle1"
+                            color="text.secondary"
+                            component="div"
+                          >
+                            {email}
+                          </Typography>
+                        </div>
+                        <div>
+                          <Link href={`/user/edit/${id}`}>
+                            <IconButton
+                              aria-label="edit"
+                              size="large"
+                              align="right"
+                              sx={{
+                                "&:hover": {
+                                  backgroundColor: "#3498db",
+                                  color: "#fff",
+                                },
+                              }}
+                            >
+                              <EditIcon />
+                            </IconButton>
+                          </Link>
                           <IconButton
-                            aria-label="edit"
+                            aria-label="delete"
                             size="large"
                             align="right"
                             sx={{
                               "&:hover": {
-                                backgroundColor: "#3498db",
+                                backgroundColor: "#d32f2f",
                                 color: "#fff",
                               },
                             }}
+                            id={id}
+                            onClick={(e) => handleDelete(e)}
                           >
-                            <EditIcon />
+                            <DeleteIcon />
                           </IconButton>
-                        </Link>
-                        <IconButton
-                          aria-label="delete"
-                          size="large"
-                          align="right"
-                          sx={{
-                            "&:hover": {
-                              backgroundColor: "#d32f2f",
-                              color: "#fff",
-                            },
-                          }}
-                          id={id}
-                          onClick={(e) => handleDelete(e)}
-                        >
-                          <DeleteIcon />
-                        </IconButton>
-                      </div>
-                    </CardContent>
-                  </Box>
-                  <CardMedia
-                    component="img"
-                    sx={{ width: 251 }}
-                    image="/avatar.png"
-                    alt="me"
-                  />
-                </Card>
+                        </div>
+                      </CardContent>
+                    </Box>
+                    <CardMedia
+                      component="img"
+                      sx={{ width: 251 }}
+                      image="/avatar.png"
+                      alt="me"
+                    />
+                  </Card>
+                </Link>
               </Grid>
             );
           })}

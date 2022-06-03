@@ -53,7 +53,7 @@ export default function Profile() {
   const handleNewBill = async (e) => {
     e.preventDefault();
     try {
-      Router.push("/edit");
+      Router.push("/bill/edit");
     } catch (error) {
       console.error(error);
     }

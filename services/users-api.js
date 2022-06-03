@@ -35,3 +35,9 @@ export async function deleteUserAPI(userId) {
   });
   return data;
 }
+
+export async function updateUserAPI(body) {
+  //   console.log("billId updateUserAPI:>> ", body);
+  const { data } = await axios.patch(`/api/user`, body);
+  return data;
+}

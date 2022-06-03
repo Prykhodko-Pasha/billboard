@@ -27,7 +27,7 @@ export default function BillsList({ bills }) {
 
   return (
     Array.isArray(bills) && (
-      <Box sx={{ width: "95%", margin: "0px" }}>
+      <Box sx={{ width: "95%", margin: "0 auto" }}>
         <Grid container spacing={2}>
           {bills.map((bill, index) => {
             const { id, title, text, author } = bill;
@@ -39,76 +39,89 @@ export default function BillsList({ bills }) {
                 md={6}
                 lg={4}
                 key={index}
-                // id={id}
               >
-                <Card sx={{ height: "250px" }}>
-                  <CardContent
+                <Link href={`/bill/${id}`}>
+                  <Card
                     sx={{
-                      height: "100%",
-                      display: "flex",
-                      flexDirection: "column",
-                      justifyContent: "space-between",
+                      height: "250px",
+                      cursor: "pointer",
+                      "&:hover": {
+                        boxShadow: "0px 10px 20px 2px rgba(0, 0, 0, 0.25)",
+                      },
                     }}
                   >
-                    <div>
-                      <Box
-                        sx={{
-                          width: "100%",
-                          display: "flex",
-                          justifyContent: "space-between",
-                          alignItems: "center",
-                        }}
-                      >
-                        <Typography variant="h5" align="left">
-                          {title}
-                        </Typography>
-                        {isAllowedEditing(author.id, user?.id, user?.role) && (
-                          <div>
-                            <Link href={`/edit/${id}`}>
+                    <CardContent
+                      sx={{
+                        height: "100%",
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <div>
+                        <Box
+                          sx={{
+                            width: "100%",
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                          }}
+                        >
+                          <Typography variant="h5" align="left">
+                            {title}
+                          </Typography>
+                          {isAllowedEditing(
+                            author.id,
+                            user?.id,
+                            user?.role
+                          ) && (
+                            <div>
+                              <Link href={`/bill/edit/${id}`}>
+                                <IconButton
+                                  aria-label="edit"
+                                  size="large"
+                                  align="right"
+                                  sx={{
+                                    "&:hover": {
+                                      backgroundColor: "#3498db",
+                                      color: "#fff",
+                                    },
+                                  }}
+                                >
+                                  <EditIcon />
+                                </IconButton>
+                              </Link>
                               <IconButton
-                                aria-label="edit"
+                                aria-label="delete"
                                 size="large"
                                 align="right"
                                 sx={{
                                   "&:hover": {
-                                    backgroundColor: "#3498db",
+                                    backgroundColor: "#d32f2f",
                                     color: "#fff",
                                   },
                                 }}
+                                id={id}
+                                onClick={(e) => handleDelete(e)}
                               >
-                                <EditIcon />
+                                <DeleteIcon />
                               </IconButton>
-                            </Link>
-                            <IconButton
-                              aria-label="delete"
-                              size="large"
-                              align="right"
-                              sx={{
-                                "&:hover": {
-                                  backgroundColor: "#d32f2f",
-                                  color: "#fff",
-                                },
-                              }}
-                              id={id}
-                              onClick={(e) => handleDelete(e)}
-                            >
-                              <DeleteIcon />
-                            </IconButton>
-                          </div>
-                        )}
-                      </Box>
-                      <Typography
-                        align="left"
-                        sx={{ width: "100%", marginTop: "16px" }}
-                      >
-                        {text}
+                            </div>
+                          )}
+                        </Box>
+                        <Typography
+                          align="left"
+                          sx={{ width: "100%", marginTop: "16px" }}
+                        >
+                          {text}
+                        </Typography>
+                      </div>
+                      <Typography sx={{ color: "#ccc" }} align="right">
+                        Author: {author.email}
                       </Typography>
-                    </div>
-                    <Typography sx={{ color: "#ccc" }} align="right">
-                      Author: {author.email}
-                    </Typography>
-                  </CardContent>
-                </Card>
+                    </CardContent>
+                  </Card>
+                </Link>
               </Grid>
             );
           })}

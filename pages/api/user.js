@@ -56,7 +56,7 @@ export default async function handle(req, res) {
         return res.json(newUser);
       }
 
-      case "PUT": {
+      case "PATCH": {
         // Update an existing user
         const { id, ...updateData } = req.body;
         const user = await updateUser(id, updateData);
