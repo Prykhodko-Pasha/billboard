@@ -21,7 +21,7 @@ export default async function handle(req, res) {
         } else {
           // Otherwise, fetch all users
           const user = await verifyToken(req);
-          console.log("user GET:>> ", user);
+          // console.log("user GET:>> ", user);
           if (!user)
             return res.status(401).json({
               message: "Unauthorized",
@@ -42,7 +42,7 @@ export default async function handle(req, res) {
         //   });
 
         // Does user exist?
-        console.log("req.body :>> ", req.body);
+        // console.log("req.body :>> ", req.body);
         const user = await findUser(req.body.email);
         if (user) {
           //   await setUser({ error: "Email in use" });

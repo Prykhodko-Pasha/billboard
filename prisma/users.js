@@ -6,7 +6,7 @@ export const getAllUsers = async (role) => {
   let users;
   switch (role) {
     case "SUPERADMIN":
-      console.log("role SUPERADMIN:>> ", role);
+      // console.log("role SUPERADMIN:>> ", role);
       users = await prisma.user.findMany({
         where: { OR: [{ role: "User" }, { role: "Moderator" }] },
         select: {

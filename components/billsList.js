@@ -11,6 +11,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import isAllowedEditing from "../helpers/isAllowedEditing";
 import { deleteBillAPI } from "../services/bills-api";
 import { useUserContext } from "../context/provider";
+import TextEditorContent from "./editorContent";
+import MyCKEditor from "./CKEditor";
 
 export default function BillsList({ bills }) {
   const [user, setUser] = useUserContext();
@@ -109,12 +111,14 @@ export default function BillsList({ bills }) {
                             </div>
                           )}
                         </Box>
-                        <Typography
+                        {/* <Typography
                           align="left"
                           sx={{ width: "100%", marginTop: "16px" }}
                         >
                           {text}
-                        </Typography>
+                        </Typography> */}
+                        <MyCKEditor text={text} id={index} />
+                        {/* <TextEditorContent storedState={JSON.parse(text)} /> */}
                       </div>
                       <Typography sx={{ color: "#ccc" }} align="right">
                         Author: {author.email}

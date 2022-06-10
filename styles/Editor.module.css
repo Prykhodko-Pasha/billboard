@@ -1,0 +1,9 @@
+.editor .ck-rounded-corners {
+    border-radius: 4px;
+    --ck-border-radius: 4px;
+}
+
+.editor .ck-content {
+    min-height: 240px;
+    border-radius: 4px;
+}

@@ -1,17 +1,18 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Router from "next/router";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import { addBillAPI } from "../../services/bills-api";
-import { useUserContext } from "../../context/provider";
+import { addBillAPI } from "../../../services/bills-api";
+import { useUserContext } from "../../../context/provider";
+import MyCKEditor from "../../../components/CKEditor";
 
 export default function CreateBill() {
   const [user, setUser] = useUserContext();
   const [title, setTitle] = useState("");
-  const [text, setText] = useState("");
+  const [text, setText] = useState(null);
 
   const handleChange = (e) => {
     const { name, value } = e.currentTarget;
@@ -19,24 +20,28 @@ export default function CreateBill() {
       case "title":
         setTitle(value);
         break;
-      case "text":
-        setText(value);
-        break;
       default:
         return;
     }
+  };
+
+  const handleEditorChange = (editorState) => {
+    setText(editorState);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const authorId = user.id;
-      const credentials = { title, text, authorId };
+      const credentials = {
+        title,
+        text,
+        authorId,
+      };
       const bill = await addBillAPI(credentials);
       if (bill) await Router.push("/profile");
     } catch (error) {
       console.log("error :>> ", error);
-      // await setUser({ error: error.response.data.message });
     }
   };
 
@@ -88,18 +93,15 @@ export default function CreateBill() {
             onChange={handleChange}
           />
 
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            id="text"
-            label="Description"
-            name="text"
-            value={text}
-            multiline
-            rows={8}
-            onChange={handleChange}
-          />
+          <div
+            className="editor"
+            style={{
+              width: "100%",
+              borderRadius: "4px",
+            }}
+          >
+            <MyCKEditor onEditorChange={handleEditorChange} />
+          </div>
 
           <Button
             type="submit"
