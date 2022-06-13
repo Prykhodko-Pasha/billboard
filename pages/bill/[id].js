@@ -1,8 +1,6 @@
-import { useEffect, useState } from "react";
 import Link from "next/link";
 import Router from "next/router";
 import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import EditIcon from "@mui/icons-material/Edit";
@@ -15,9 +13,10 @@ import { getBill } from "../../prisma/bills";
 import { useUserContext } from "../../context/provider";
 import isAllowedEditing from "../../helpers/isAllowedEditing";
 import { deleteBillAPI } from "../../services/bills-api";
+import MyCKEditor from "../../components/CKEditor";
 
 export default function Bill({ data }) {
-  const { id, title, text, author } = data;
+  const { id, title, text, category, author } = data;
 
   const [user, setUser] = useUserContext();
 
@@ -99,9 +98,14 @@ export default function Bill({ data }) {
               </div>
             )}
           </Box>
-          <Typography mt={2} mb={2}>
-            {text}
+
+          <Typography mb={1} sx={{ color: "#ccc" }} align="left">
+            {category}
           </Typography>
+
+          <div className="card_text">
+            <MyCKEditor text={text} id={id} editable={false} />
+          </div>
 
           <Typography sx={{ color: "#ccc" }} align="right">
             Author: {author.email}

@@ -17,6 +17,7 @@ export default function BillsList({ bills }) {
   const [user, setUser] = useUserContext();
 
   const handleDelete = async (e) => {
+    e.preventDefault();
     try {
       const billId = e.currentTarget.id;
       const bill = await deleteBillAPI(billId);
@@ -31,7 +32,7 @@ export default function BillsList({ bills }) {
       <Box sx={{ width: "95%", margin: "0 auto" }}>
         <Grid container spacing={2}>
           {bills.map((bill, index) => {
-            const { id, title, text, author } = bill;
+            const { id, title, text, category, author } = bill;
             return (
               <Grid
                 item
@@ -71,6 +72,7 @@ export default function BillsList({ bills }) {
                           <Typography variant="h5" align="left">
                             {title}
                           </Typography>
+
                           {isAllowedEditing(
                             author.id,
                             user?.id,
@@ -110,9 +112,12 @@ export default function BillsList({ bills }) {
                             </div>
                           )}
                         </Box>
+                        <Typography mb={1} sx={{ color: "#ccc" }} align="left">
+                          {category}
+                        </Typography>
 
                         <div className="card_text">
-                          <MyCKEditor text={text} id={index} />
+                          <MyCKEditor text={text} id={index} editable={false} />
                         </div>
                       </div>
                       <Typography sx={{ color: "#ccc" }} align="right">

@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 
-function MyCKEditor({ text = "", id, onEditorChange }) {
+function MyCKEditor({ text = "", id, onEditorChange, editable }) {
   const editorRef = useRef();
   const { CKEditor, ClassicEditor } = editorRef.current || {};
 
@@ -44,7 +44,7 @@ function MyCKEditor({ text = "", id, onEditorChange }) {
         }}
         data={text}
         onReady={(editor) => {
-          if (text) {
+          if (!editable) {
             editor.enableReadOnlyMode(`${id}`);
             editor.ui.view.toolbar.element.style.display = "none";
           }

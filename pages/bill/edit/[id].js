@@ -5,44 +5,49 @@ import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
 import { updateBillAPI } from "../../../services/bills-api";
 import { getBill } from "../../../prisma/bills";
 import { useUserContext } from "../../../context/provider";
 import isAllowedEditing from "../../../helpers/isAllowedEditing";
+import MyCKEditor from "../../../components/CKEditor";
+import categories from "../../../helpers/categories";
 
 export default function EditBill({ data }) {
-  const { id, title: initTitle, text: initText, author } = data;
+  const {
+    id,
+    title: initTitle,
+    text: initText,
+    category: initCategory,
+    author,
+  } = data;
 
   const [user, setUser] = useUserContext();
   const [title, setTitle] = useState(initTitle || "");
-  const [text, setText] = useState(initText || "");
+  const [text, setText] = useState(initText);
+  const [category, setCategory] = useState(initCategory);
 
   useEffect(() => {
-    // if (!user) Router.push("/login");
     user &&
       !isAllowedEditing(author.id, user?.id, user?.role) &&
       Router.push("/profile");
   }, [user]);
 
   const handleChange = (e) => {
-    const { name, value } = e.currentTarget;
-    switch (name) {
-      case "title":
-        setTitle(value);
-        break;
-      case "text":
-        setText(value);
-        break;
-      default:
-        return;
-    }
+    setTitle(e.currentTarget.value);
+  };
+
+  const handleEditorChange = (editorState) => {
+    setText(editorState);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // const authorId = getCookies("user").id;
-      const credentials = { id, title, text };
+      const credentials = { id, title, text, category };
       const bill = await updateBillAPI(credentials);
       if (bill) Router.back();
     } catch (error) {
@@ -99,18 +104,32 @@ export default function EditBill({ data }) {
             onChange={handleChange}
           />
 
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            id="text"
-            label="Description"
-            name="text"
-            value={text}
-            multiline
-            rows={8}
-            onChange={handleChange}
-          />
+          <div className="editor">
+            <MyCKEditor
+              text={text}
+              editable={true}
+              onEditorChange={handleEditorChange}
+            />
+          </div>
+
+          <FormControl margin="normal" sx={{ width: "50%" }}>
+            <InputLabel id="category-label">Category</InputLabel>
+            <Select
+              // sx={{ width: "50%" }}
+              labelId="category-label"
+              name="category"
+              value={category}
+              label="Category"
+              onChange={(e) => setCategory(e.target.value)}
+            >
+              {categories.map((item, index) => (
+                <MenuItem value={item} key={index}>
+                  {item}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
           <Box
             sx={{
               width: "100%",

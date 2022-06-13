@@ -16,6 +16,7 @@ export async function getUserBillsAPI(userId) {
 }
 
 export async function addBillAPI(body) {
+  // console.log("body :>> ", body);
   const { data } = await axios.post("/api/bill", body);
   return data;
 }
@@ -27,23 +28,9 @@ export async function updateBillAPI(body) {
 }
 
 export async function deleteBillAPI(billId) {
-  // console.log("billId deleteBillAPI:>> ");
+  // console.log("billId deleteBillAPI:>> ", billId);
   const { data } = await axios.delete(`/api/bill`, {
     params: { billId },
   });
   return data;
 }
-
-// export async function loginBillAPI(body) {
-//   const { data } = await axios.put("/api/auth", body);
-//   const { password, ...BillData } = data;
-//   return BillData;
-// }
-// export async function logoutBillAPI() {
-//   await axios.patch("/api/auth");
-// }
-
-// export async function delContactAPI(contactId) {
-//   await axios.delete(`/contacts/${contactId}`);
-//   return contactId;
-// }

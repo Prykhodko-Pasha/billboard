@@ -8,6 +8,7 @@ export const getAllBills = async () => {
       id: true,
       title: true,
       text: true,
+      category: true,
       author: { select: { id: true, email: true } },
     },
   });
@@ -21,6 +22,7 @@ export const getUserBills = async (userId) => {
       id: true,
       title: true,
       text: true,
+      category: true,
       author: { select: { id: true, email: true } },
     },
   });
@@ -34,6 +36,7 @@ export const getBill = async (id) => {
       id: true,
       title: true,
       text: true,
+      category: true,
       author: { select: { id: true, email: true } },
     },
   });
@@ -49,11 +52,12 @@ export const findbill = async (id) => {
 
 // CREATE
 export const createBill = async (body) => {
-  const { title, text, authorId } = body;
+  const { title, text, category, authorId } = body;
   const bill = await prisma.bill.create({
     data: {
       title,
       text,
+      category,
       authorId,
     },
   });

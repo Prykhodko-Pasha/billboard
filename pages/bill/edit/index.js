@@ -5,14 +5,20 @@ import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
 import { addBillAPI } from "../../../services/bills-api";
 import { useUserContext } from "../../../context/provider";
 import MyCKEditor from "../../../components/CKEditor";
+import categories from "../../../helpers/categories";
 
 export default function CreateBill() {
   const [user, setUser] = useUserContext();
   const [title, setTitle] = useState("");
   const [text, setText] = useState(null);
+  const [category, setCategory] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.currentTarget;
@@ -36,6 +42,7 @@ export default function CreateBill() {
       const credentials = {
         title,
         text,
+        category,
         authorId,
       };
       const bill = await addBillAPI(credentials);
@@ -95,8 +102,26 @@ export default function CreateBill() {
           />
 
           <div className="editor">
-            <MyCKEditor onEditorChange={handleEditorChange} />
+            <MyCKEditor onEditorChange={handleEditorChange} editable={true} />
           </div>
+
+          <FormControl margin="normal" sx={{ width: "50%" }}>
+            <InputLabel id="category-label">Category</InputLabel>
+            <Select
+              // sx={{ width: "50%" }}
+              labelId="category-label"
+              name="category"
+              value={category}
+              label="Category"
+              onChange={(e) => setCategory(e.target.value)}
+            >
+              {categories.map((item, index) => (
+                <MenuItem value={item} key={index}>
+                  {item}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
 
           <Button
             type="submit"
