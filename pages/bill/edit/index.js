@@ -55,6 +55,7 @@ export default function CreateBill() {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
+        borderRadius: "4px",
       }}
     >
       <Box
@@ -93,13 +94,7 @@ export default function CreateBill() {
             onChange={handleChange}
           />
 
-          <div
-            className="editor"
-            style={{
-              width: "100%",
-              borderRadius: "4px",
-            }}
-          >
+          <div className="editor">
             <MyCKEditor onEditorChange={handleEditorChange} />
           </div>
 

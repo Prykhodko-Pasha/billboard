@@ -41,20 +41,8 @@ function MyCKEditor({ text = "", id, onEditorChange }) {
             "redo",
           ],
           placeholder: "Description *",
-          //   style,
         }}
         data={text}
-        onInit={(editor) => {
-          if (!text) {
-            editor.ui.view.editable.extendTemplate({
-              attributes: {
-                style: {
-                  minHeight: "300px",
-                },
-              },
-            });
-          }
-        }}
         onReady={(editor) => {
           if (text) {
             editor.enableReadOnlyMode(`${id}`);
@@ -76,7 +64,7 @@ function MyCKEditor({ text = "", id, onEditorChange }) {
       />
     );
   } else {
-    return <h2> Editor is loading </h2>;
+    return <h3> Loading... </h3>;
   }
 }
 

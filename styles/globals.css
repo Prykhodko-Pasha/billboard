@@ -18,3 +18,19 @@ a {
 * {
   box-sizing: border-box;
 }
+
+/* === CKEditor === */
+.editor {
+  width: 100%;
+  --ck-border-radius: 4px;
+}
+
+.editor .ck-content {
+  min-height: 240px;
+}
+
+.card_text .ck.ck-editor__main>.ck-editor__editable:not(.ck-focused){
+  border-left: none;
+  border-right: none;
+  border-bottom: none;
+}
