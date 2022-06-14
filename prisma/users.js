@@ -2,12 +2,19 @@ import prisma from "./prisma";
 import hashPassword from "../helpers/hashPassword";
 
 // READ
-export const getAllUsers = async (role) => {
+export const getAllUsers = async (role, page) => {
   let users;
+  const allUsers = await prisma.user.findMany();
+  const usersCount = allUsers.length;
   switch (role) {
     case "SUPERADMIN":
       // console.log("role SUPERADMIN:>> ", role);
       users = await prisma.user.findMany({
+        orderBy: {
+          id: "desc",
+        },
+        skip: 9 * (page - 1),
+        take: 9,
         where: { OR: [{ role: "User" }, { role: "Moderator" }] },
         select: {
           id: true,
@@ -20,6 +27,11 @@ export const getAllUsers = async (role) => {
       break;
     case "Moderator":
       users = await prisma.user.findMany({
+        orderBy: {
+          id: "desc",
+        },
+        skip: 9 * (page - 1),
+        take: 9,
         where: { role: "User" },
         select: {
           id: true,
@@ -32,8 +44,8 @@ export const getAllUsers = async (role) => {
     default:
       break;
   }
-
-  return users;
+  return { users, count: usersCount };
+  // return users;
 };
 
 // export const getUser = async (email) => {

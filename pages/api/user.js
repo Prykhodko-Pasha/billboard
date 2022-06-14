@@ -26,7 +26,7 @@ export default async function handle(req, res) {
             return res.status(401).json({
               message: "Unauthorized",
             });
-          const users = await getAllUsers(user.role);
+          const users = await getAllUsers(user.role, req.query.page);
           return res.json(users);
         }
 

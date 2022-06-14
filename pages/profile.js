@@ -19,15 +19,17 @@ import UsersList from "../components/usersList";
 
 export default function Profile() {
   const [user, setUser] = useUserContext();
-  const [page, setPage] = useState(1);
-  const [count, setCount] = useState(1);
+  const [billsPage, setBillsPage] = useState(1);
+  const [billsCount, setBillsCount] = useState(1);
+  const [usersPage, setUsersPage] = useState(1);
+  const [usersCount, setUsersCount] = useState(1);
   const [bills, setBills] = useState(null);
   const [users, setUsers] = useState(null);
-  const [value, setValue] = useState(0);
+  const [tab, setTab] = useState(0);
   const [showAllUsers, setShowAllUsers] = useState(false);
 
   const handleChange = (event, newValue) => {
-    setValue(newValue);
+    setTab(newValue);
     // setPage(1);
     // setCount(1);
   };
@@ -36,8 +38,11 @@ export default function Profile() {
     if (user)
       try {
         const { id, role } = user;
-        fetchUserBills(id, page);
-        (role === "SUPERADMIN" || role === "Moderator") && fetchUsers();
+        fetchUserBills(id, billsPage);
+        if (role === "SUPERADMIN" || role === "Moderator") {
+          fetchUsers(usersPage);
+          setShowAllUsers(true);
+        }
       } catch (error) {
         console.log("error:>> ", error);
       }
@@ -46,13 +51,13 @@ export default function Profile() {
   const fetchUserBills = async (userId, page) => {
     const userBills = await getUserBillsAPI(userId, page);
     setBills(userBills.bills);
-    setCount(Math.ceil(userBills.count / 9));
+    setBillsCount(Math.ceil(userBills.count / 9));
   };
 
-  const fetchUsers = async () => {
-    const usersList = await getAllUsersAPI();
-    setUsers(usersList);
-    setShowAllUsers(true);
+  const fetchUsers = async (page) => {
+    const usersList = await getAllUsersAPI(page);
+    setUsers(usersList.users);
+    setUsersCount(Math.ceil(usersList.count / 9));
   };
 
   const handleNewBill = async (e) => {
@@ -65,12 +70,25 @@ export default function Profile() {
   };
 
   const handleChangePage = async (e, value) => {
-    setPage(value);
-    try {
-      fetchUserBills(user.id, value);
-      // (role === "SUPERADMIN" || role === "Moderator") && fetchUsers();
-    } catch (error) {
-      console.log("error:>> ", error);
+    switch (tab) {
+      case 0:
+        setBillsPage(value);
+        try {
+          fetchUserBills(user.id, value);
+        } catch (error) {
+          console.log("error:>> ", error);
+        }
+        break;
+      case 1:
+        setUsersPage(value);
+        try {
+          fetchUsers(value);
+        } catch (error) {
+          console.log("error:>> ", error);
+        }
+        break;
+      default:
+        break;
     }
   };
 
@@ -124,7 +142,7 @@ export default function Profile() {
       <Box sx={{ width: "100%" }}>
         <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
           <Tabs
-            value={value}
+            value={tab}
             onChange={handleChange}
             aria-label="basic tabs example"
             centered
@@ -133,22 +151,43 @@ export default function Profile() {
             {showAllUsers && <Tab label="All users" {...a11yProps(1)} />}
           </Tabs>
         </Box>
-        <TabPanel value={value} index={0}>
+        <TabPanel value={tab} index={0}>
           <BillsList bills={bills} />
         </TabPanel>
         {showAllUsers && (
-          <TabPanel value={value} index={1}>
+          <TabPanel value={tab} index={1}>
             <UsersList users={users} />
           </TabPanel>
         )}
       </Box>
 
-      {count > 1 && (
+      {/* ==== Bills pagination ==== */}
+      {tab === 0 && billsCount > 1 && (
         <Box mt={5}>
           <Pagination
-            page={page}
+            page={billsPage}
             size="large"
-            count={count}
+            count={billsCount}
+            shape="rounded"
+            showFirstButton
+            showLastButton
+            sx={{
+              "& ul": {
+                justifyContent: "center",
+              },
+            }}
+            onChange={handleChangePage}
+          />
+        </Box>
+      )}
+
+      {/* ==== Users pagination ==== */}
+      {tab === 1 && usersCount > 1 && (
+        <Box mt={5}>
+          <Pagination
+            page={usersPage}
+            size="large"
+            count={usersCount}
             shape="rounded"
             showFirstButton
             showLastButton
