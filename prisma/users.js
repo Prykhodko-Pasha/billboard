@@ -16,7 +16,7 @@ export const getAllUsers = async (role) => {
           role: true,
         },
       });
-      console.log("users :>> ", users);
+      // console.log("users :>> ", users);
       break;
     case "Moderator":
       users = await prisma.user.findMany({

@@ -15,7 +15,7 @@ export default async function handle(req, res) {
       case "GET": {
         // console.log("api bill req :>> ", req.query);
         if (req.query.userId) {
-          const userBills = await getUserBills(req.query.userId);
+          const userBills = await getUserBills(req.query);
           return res.json(userBills);
         } else {
           const bills = await getAllBills();

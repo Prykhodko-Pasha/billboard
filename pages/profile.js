@@ -7,7 +7,7 @@ import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import AddIcon from "@mui/icons-material/Add";
 import Button from "@mui/material/Button";
-// import Divider from "@mui/material/Divider";
+import Pagination from "@mui/material/Pagination";
 import { getUserBillsAPI } from "../services/bills-api";
 import BillsList from "../components/billsList";
 import { useUserContext } from "../context/provider";
@@ -19,7 +19,8 @@ import UsersList from "../components/usersList";
 
 export default function Profile() {
   const [user, setUser] = useUserContext();
-  // const [switch, setSwitch] = useState("bills");
+  const [page, setPage] = useState(1);
+  const [count, setCount] = useState(1);
   const [bills, setBills] = useState(null);
   const [users, setUsers] = useState(null);
   const [value, setValue] = useState(0);
@@ -33,16 +34,17 @@ export default function Profile() {
     if (user)
       try {
         const { id, role } = user;
-        fetchUserBills(id);
+        fetchUserBills(id, page);
         (role === "SUPERADMIN" || role === "Moderator") && fetchUsers();
       } catch (error) {
         console.log("error:>> ", error);
       }
   }, [user]);
 
-  const fetchUserBills = async (userId) => {
-    const userBills = await getUserBillsAPI(userId);
-    setBills(userBills.reverse());
+  const fetchUserBills = async (userId, page) => {
+    const userBills = await getUserBillsAPI(userId, page);
+    setBills(userBills.bills);
+    setCount(Math.ceil(userBills.count / 9));
   };
   const fetchUsers = async () => {
     const usersList = await getAllUsersAPI();
@@ -127,6 +129,23 @@ export default function Profile() {
           </TabPanel>
         )}
       </Box>
+      {count > 1 && (
+        <Box mt={5}>
+          <Pagination
+            page={page}
+            size="large"
+            count={count}
+            shape="rounded"
+            showFirstButton
+            showLastButton
+            sx={{
+              "& ul": {
+                justifyContent: "center",
+              },
+            }}
+          />
+        </Box>
+      )}
       {/* <Typography
         variant="h4"
         align="left"

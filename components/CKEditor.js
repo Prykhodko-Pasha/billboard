@@ -44,7 +44,7 @@ function MyCKEditor({ text = "", id, onEditorChange, editable }) {
         }}
         data={text}
         onReady={(editor) => {
-          if (!editable) {
+          if (editor && !editable) {
             editor.enableReadOnlyMode(`${id}`);
             editor.ui.view.toolbar.element.style.display = "none";
           }

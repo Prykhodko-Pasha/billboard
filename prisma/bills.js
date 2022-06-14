@@ -15,8 +15,17 @@ export const getAllBills = async () => {
   return bills;
 };
 
-export const getUserBills = async (userId) => {
-  const bills = await prisma.bill.findMany({
+export const getUserBills = async ({ userId, page }) => {
+  const allUserBills = await prisma.bill.findMany({
+    where: { authorId: userId },
+  });
+  const billsCount = allUserBills.length;
+  const takenBills = await prisma.bill.findMany({
+    orderBy: {
+      id: "desc",
+    },
+    skip: 9 * (page - 1),
+    take: 9,
     where: { authorId: userId },
     select: {
       id: true,
@@ -26,7 +35,7 @@ export const getUserBills = async (userId) => {
       author: { select: { id: true, email: true } },
     },
   });
-  return bills;
+  return { bills: takenBills, count: billsCount };
 };
 
 export const getBill = async (id) => {

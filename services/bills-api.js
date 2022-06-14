@@ -7,10 +7,10 @@ export async function getAllBillsAPI() {
   return data;
 }
 
-export async function getUserBillsAPI(userId) {
+export async function getUserBillsAPI(userId, page) {
   //   console.log("body getUserBillsAPI:>> ", body);
   const { data } = await axios.get("/api/bill", {
-    params: { userId },
+    params: { userId, page },
   });
   return data;
 }
