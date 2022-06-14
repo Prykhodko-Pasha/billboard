@@ -18,7 +18,7 @@ export default async function handle(req, res) {
           const userBills = await getUserBills(req.query);
           return res.json(userBills);
         } else {
-          const bills = await getAllBills();
+          const bills = await getAllBills(req.query.page);
           return res.json(bills);
         }
       }

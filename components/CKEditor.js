@@ -53,7 +53,7 @@ function MyCKEditor({ text = "", id, onEditorChange, editable }) {
           // do something when editor's content changed
           const data = editor.getData();
           console.log({ event, editor, data });
-          onEditorChange(data);
+          onEditorChange && onEditorChange(data);
         }}
         // onBlur={(event, editor) => {
         //   console.log("Blur.", editor);

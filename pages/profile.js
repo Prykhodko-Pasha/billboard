@@ -28,6 +28,8 @@ export default function Profile() {
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
+    // setPage(1);
+    // setCount(1);
   };
 
   useEffect(() => {
@@ -46,6 +48,7 @@ export default function Profile() {
     setBills(userBills.bills);
     setCount(Math.ceil(userBills.count / 9));
   };
+
   const fetchUsers = async () => {
     const usersList = await getAllUsersAPI();
     setUsers(usersList);
@@ -58,6 +61,16 @@ export default function Profile() {
       Router.push("/bill/edit");
     } catch (error) {
       console.error(error);
+    }
+  };
+
+  const handleChangePage = async (e, value) => {
+    setPage(value);
+    try {
+      fetchUserBills(user.id, value);
+      // (role === "SUPERADMIN" || role === "Moderator") && fetchUsers();
+    } catch (error) {
+      console.log("error:>> ", error);
     }
   };
 
@@ -107,7 +120,7 @@ export default function Profile() {
       >
         Create a bill
       </Button>
-      {/* <Divider sx={{ width: "100%", margin: "20px 0" }} /> */}
+
       <Box sx={{ width: "100%" }}>
         <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
           <Tabs
@@ -129,6 +142,7 @@ export default function Profile() {
           </TabPanel>
         )}
       </Box>
+
       {count > 1 && (
         <Box mt={5}>
           <Pagination
@@ -143,18 +157,10 @@ export default function Profile() {
                 justifyContent: "center",
               },
             }}
+            onChange={handleChangePage}
           />
         </Box>
       )}
-      {/* <Typography
-        variant="h4"
-        align="left"
-        sx={{ color: "#ccc", textTransform: "uppercase", margin: "20px 0" }}
-      >
-        My bills
-      </Typography> */}
-      {/* <BillsList bills={bills} /> */}
-      {/* {users && <UsersList bills={bills} />} */}
     </>
   );
 }
