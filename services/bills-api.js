@@ -10,7 +10,7 @@ export async function getAllBillsAPI(params) {
 }
 
 export async function getUserBillsAPI(params) {
-  //   console.log("body getUserBillsAPI:>> ", body);
+  // console.log("params getUserBillsAPI:>> ", params);
   const { data } = await axios.get("/api/bill", {
     params: { ...params },
   });

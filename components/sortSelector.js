@@ -14,10 +14,12 @@ export default function SortSelector({ initSort, handleChangeSort }) {
   };
 
   return (
-    <FormControl sx={{ width: "100%", margin: "0 0 16px" }}>
-      <InputLabel id="sort-label">Sort by</InputLabel>
+    <FormControl variant="standard" sx={{ width: "30%", margin: "0 0 24px" }}>
+      <InputLabel variant="standard" id="sort-label">
+        Sort by
+      </InputLabel>
       <Select
-        sx={{ width: "40%" }}
+        // sx={{ width: "40%" }}
         labelId="sort-label"
         name="sort"
         value={sort}

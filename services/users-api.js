@@ -6,9 +6,9 @@ export async function getUserAPI() {
   return data;
 }
 
-export async function getAllUsersAPI(page) {
+export async function getAllUsersAPI(params) {
   const { data } = await axios.get("/api/user", {
-    params: { page },
+    params: { ...params },
   });
   // console.log("data getAllUsersAPI:>> ", data);
   return data;

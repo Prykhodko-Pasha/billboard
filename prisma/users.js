@@ -2,20 +2,63 @@ import prisma from "./prisma";
 import hashPassword from "../helpers/hashPassword";
 
 // READ
-export const getAllUsers = async (role, page) => {
+export const getAllUsers = async (params) => {
+  console.log("params getAllUsers:>> ", params);
+  const { id: userId, role, page, search } = params;
   let users;
-  const allUsers = await prisma.user.findMany();
-  const usersCount = allUsers.length;
+  let allUsers;
+  let usersCount;
+
   switch (role) {
     case "SUPERADMIN":
       // console.log("role SUPERADMIN:>> ", role);
+      allUsers = await prisma.user.findMany({
+        where: {
+          OR: [{ role: "User" }, { role: "Moderator" }],
+          OR: [
+            {
+              name: {
+                contains: search,
+                mode: "insensitive",
+              },
+            },
+            {
+              email: {
+                contains: search,
+                mode: "insensitive",
+              },
+            },
+          ],
+          NOT: { id: userId },
+        },
+      });
+      // console.log("allUsers :>> ", allUsers);
+      usersCount = allUsers.length;
+
       users = await prisma.user.findMany({
         orderBy: {
           id: "desc",
         },
         skip: 9 * (page - 1),
         take: 9,
-        where: { OR: [{ role: "User" }, { role: "Moderator" }] },
+        where: {
+          OR: [{ role: "User" }, { role: "Moderator" }],
+          OR: [
+            {
+              name: {
+                contains: search,
+                mode: "insensitive",
+              },
+            },
+            {
+              email: {
+                contains: search,
+                mode: "insensitive",
+              },
+            },
+          ],
+          NOT: { id: userId },
+        },
         select: {
           id: true,
           name: true,
@@ -25,14 +68,52 @@ export const getAllUsers = async (role, page) => {
       });
       // console.log("users :>> ", users);
       break;
+
     case "Moderator":
+      allUsers = await prisma.user.findMany({
+        where: {
+          role: "User",
+          OR: [
+            {
+              name: {
+                contains: search,
+                mode: "insensitive",
+              },
+            },
+            {
+              email: {
+                contains: search,
+                mode: "insensitive",
+              },
+            },
+          ],
+        },
+      });
+      usersCount = allUsers.length;
+
       users = await prisma.user.findMany({
         orderBy: {
           id: "desc",
         },
         skip: 9 * (page - 1),
         take: 9,
-        where: { role: "User" },
+        where: {
+          role: "User",
+          OR: [
+            {
+              name: {
+                contains: search,
+                mode: "insensitive",
+              },
+            },
+            {
+              email: {
+                contains: search,
+                mode: "insensitive",
+              },
+            },
+          ],
+        },
         select: {
           id: true,
           name: true,
@@ -48,12 +129,6 @@ export const getAllUsers = async (role, page) => {
   // return users;
 };
 
-// export const getUser = async (email) => {
-//   const user = await prisma.user.findUnique({
-//     where: { email },
-//   });
-//   return user;
-// };
 export const getUser = async (param) => {
   // console.log("param getUser:>> ", param);
   const user = await prisma.user.findUnique({

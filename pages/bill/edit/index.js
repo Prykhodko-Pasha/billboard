@@ -40,7 +40,7 @@ export default function CreateBill() {
     try {
       const authorId = user.id;
       const credentials = {
-        title,
+        title: title[0].toUpperCase() + title.slice(1),
         text,
         category,
         authorId,

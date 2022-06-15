@@ -4,10 +4,43 @@ import prisma from "./prisma";
 // READ
 export const getAllBills = async (params) => {
   // console.log("params getAllBills:>> ", params);
-  const { page, sortKey, sortValue } = params;
-  const allBills = await prisma.bill.findMany();
+  const { page, sortKey, sortValue, search } = params;
+  const allBills = await prisma.bill.findMany({
+    where: {
+      OR: [
+        {
+          title: {
+            contains: search,
+            mode: "insensitive",
+          },
+        },
+        {
+          text: {
+            contains: search,
+            mode: "insensitive",
+          },
+        },
+      ],
+    },
+  });
   const billsCount = allBills.length;
   const takenBills = await prisma.bill.findMany({
+    where: {
+      OR: [
+        {
+          title: {
+            contains: search,
+            mode: "insensitive",
+          },
+        },
+        {
+          text: {
+            contains: search,
+            mode: "insensitive",
+          },
+        },
+      ],
+    },
     orderBy: {
       [sortKey]: sortValue,
     },
@@ -25,19 +58,51 @@ export const getAllBills = async (params) => {
 };
 
 export const getUserBills = async (params) => {
-  const { userId, page, sortKey, sortValue } = params;
+  // console.log("params getUserBills:>> ", params);
+  const { userId, page, sortKey, sortValue, search } = params;
   const allUserBills = await prisma.bill.findMany({
-    where: { authorId: userId },
+    where: {
+      OR: [
+        {
+          title: {
+            contains: search,
+            mode: "insensitive",
+          },
+        },
+        {
+          text: {
+            contains: search,
+            mode: "insensitive",
+          },
+        },
+      ],
+      authorId: userId,
+    },
   });
   const billsCount = allUserBills.length;
   const takenBills = await prisma.bill.findMany({
-    where: { authorId: userId },
+    where: {
+      OR: [
+        {
+          title: {
+            contains: search,
+            mode: "insensitive",
+          },
+        },
+        {
+          text: {
+            contains: search,
+            mode: "insensitive",
+          },
+        },
+      ],
+      authorId: userId,
+    },
     orderBy: {
       [sortKey]: sortValue,
     },
     skip: 9 * (page - 1),
     take: 9,
-    where: { authorId: userId },
     select: {
       id: true,
       title: true,
@@ -46,6 +111,7 @@ export const getUserBills = async (params) => {
       author: { select: { id: true, email: true } },
     },
   });
+  // console.log("takenBills :>> ", takenBills);
   return { bills: takenBills, count: billsCount };
 };
 

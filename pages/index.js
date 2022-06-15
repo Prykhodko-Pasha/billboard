@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { getAllBills } from "../prisma/bills";
 import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
@@ -7,38 +7,43 @@ import Pagination from "@mui/material/Pagination";
 import BillsList from "../components/billsList";
 import { getAllBillsAPI } from "../services/bills-api";
 import SortSelector from "../components/sortSelector";
+import SearchInput from "../components/searchInput";
 
 export default function Home({ initBills, initCount }) {
   const [page, setPage] = useState(1);
   const [sortKey, setSortKey] = useState("id");
   const [sortValue, setSortValue] = useState("desc");
+  const [query, setQuery] = useState("");
   const [count, setCount] = useState(Math.ceil(initCount / 9));
   const [bills, setBills] = useState(initBills);
 
-  const fetchBills = async (page, sortKey, sortValue) => {
-    const allBills = await getAllBillsAPI({ page, sortKey, sortValue });
+  useEffect(() => {
+    try {
+      fetchBills(page, sortKey, sortValue, query);
+    } catch (error) {
+      console.log("error:>> ", error);
+    }
+  }, [page, sortKey, sortValue, query]);
+
+  const fetchBills = async (page, sortKey, sortValue, search = "") => {
+    const allBills = await getAllBillsAPI({ page, sortKey, sortValue, search });
     setBills(allBills.bills);
     setCount(Math.ceil(allBills.count / 9));
+    if (page > 1 && allBills.bills.length === 0) setPage(1);
   };
 
   const handleChangePage = async (e, value) => {
     setPage(value);
-    try {
-      fetchBills(value, sortKey, sortValue);
-    } catch (error) {
-      console.log("error:>> ", error);
-    }
   };
 
   const handleChangeSort = async (sort) => {
     const [key, value] = sort.split(" ");
     setSortKey(key);
     setSortValue(value);
-    try {
-      fetchBills(page, key, value);
-    } catch (error) {
-      console.log("error:>> ", error);
-    }
+  };
+
+  const handleSearch = async (value) => {
+    setQuery(value);
   };
 
   return (
@@ -50,12 +55,16 @@ export default function Home({ initBills, initCount }) {
       >
         Welcome to Billboard!
       </Typography>
-      <Divider sx={{ width: "100%", margin: "20px 0" }} />
+      <Divider sx={{ width: "100%", margin: "20px 0 8px" }} />
 
-      <SortSelector
-        initSort={`${sortKey} ${sortValue}`}
-        handleChangeSort={handleChangeSort}
-      />
+      <Box sx={{ width: "100%", display: "flex" }}>
+        <SearchInput onEnter={handleSearch} />
+
+        <SortSelector
+          initSort={`${sortKey} ${sortValue}`}
+          handleChangeSort={handleChangeSort}
+        />
+      </Box>
 
       {bills && <BillsList bills={bills} />}
 
@@ -86,6 +95,7 @@ export async function getServerSideProps() {
     page: 1,
     sortKey: "id",
     sortValue: "desc",
+    search: "",
   });
   return {
     props: {

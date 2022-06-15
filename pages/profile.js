@@ -17,6 +17,7 @@ import Tab from "@mui/material/Tab";
 import { getAllUsersAPI } from "../services/users-api";
 import UsersList from "../components/usersList";
 import SortSelector from "../components/sortSelector";
+import SearchInput from "../components/searchInput";
 
 export default function Profile() {
   const [user, setUser] = useUserContext();
@@ -30,40 +31,48 @@ export default function Profile() {
   const [users, setUsers] = useState(null);
   const [tab, setTab] = useState(0);
   const [showAllUsers, setShowAllUsers] = useState(false);
+  const [query, setQuery] = useState("");
 
   const handleChange = (event, newValue) => {
     setTab(newValue);
   };
 
   useEffect(() => {
+    if (user) {
+      const { role } = user;
+      if (role === "SUPERADMIN" || role === "Moderator") setShowAllUsers(true);
+    }
+  }, [user]);
+
+  useEffect(() => {
     if (user)
       try {
-        const { id, role } = user;
-        fetchUserBills(id, billsPage, sortKey, sortValue);
-        if (role === "SUPERADMIN" || role === "Moderator") {
-          fetchUsers(usersPage);
-          setShowAllUsers(true);
-        }
+        tab === 0 &&
+          fetchUserBills(user.id, billsPage, sortKey, sortValue, query);
+        tab === 1 && fetchUsers(usersPage, query);
       } catch (error) {
         console.log("error:>> ", error);
       }
-  }, [user]);
+  }, [user, billsPage, sortKey, sortValue, tab, usersPage, query]);
 
-  const fetchUserBills = async (userId, page, sortKey, sortValue) => {
+  const fetchUserBills = async (userId, page, sortKey, sortValue, search) => {
     const userBills = await getUserBillsAPI({
       userId,
       page,
       sortKey,
       sortValue,
+      search,
     });
     setBills(userBills.bills);
     setBillsCount(Math.ceil(userBills.count / 9));
+    if (billsPage > 1 && userBills.bills.length === 0) setBillsPage(1);
   };
 
-  const fetchUsers = async (page) => {
-    const usersList = await getAllUsersAPI(page);
+  const fetchUsers = async (page, search) => {
+    const usersList = await getAllUsersAPI({ page, search });
     setUsers(usersList.users);
     setUsersCount(Math.ceil(usersList.count / 9));
+    if (usersPage > 1 && usersList.users.length === 0) setUsersPage(1);
   };
 
   const handleNewBill = async (e) => {
@@ -79,20 +88,10 @@ export default function Profile() {
     switch (tab) {
       case 0:
         setBillsPage(value);
-        try {
-          fetchUserBills(user.id, value, sortKey, sortValue);
-        } catch (error) {
-          console.log("error:>> ", error);
-        }
         break;
 
       case 1:
         setUsersPage(value);
-        try {
-          fetchUsers(value);
-        } catch (error) {
-          console.log("error:>> ", error);
-        }
         break;
 
       default:
@@ -104,11 +103,10 @@ export default function Profile() {
     const [key, value] = sort.split(" ");
     setSortKey(key);
     setSortValue(value);
-    try {
-      fetchUserBills(user.id, billsPage, key, value);
-    } catch (error) {
-      console.log("error:>> ", error);
-    }
+  };
+
+  const handleSearch = async (value) => {
+    setQuery(value);
   };
 
   function a11yProps(index) {
@@ -159,7 +157,7 @@ export default function Profile() {
       </Button>
 
       <Box sx={{ width: "100%" }}>
-        <Box sx={{ borderBottom: 1, borderColor: "divider", mb: "20px" }}>
+        <Box sx={{ borderBottom: 1, borderColor: "divider", mb: "8px" }}>
           <Tabs
             value={tab}
             onChange={handleChange}
@@ -171,11 +169,17 @@ export default function Profile() {
           </Tabs>
         </Box>
 
+        <Box sx={{ width: "100%", display: "flex" }}>
+          <SearchInput onEnter={handleSearch} />
+          {tab === 0 && (
+            <SortSelector
+              initSort={`${sortKey} ${sortValue}`}
+              handleChangeSort={handleChangeSort}
+            />
+          )}
+        </Box>
+
         <TabPanel value={tab} index={0}>
-          <SortSelector
-            initSort={`${sortKey} ${sortValue}`}
-            handleChangeSort={handleChangeSort}
-          />
           <BillsList bills={bills} />
         </TabPanel>
         {showAllUsers && (
