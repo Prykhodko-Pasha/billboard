@@ -1,18 +1,18 @@
 import axios from "axios";
 
-export async function getAllBillsAPI(page) {
+export async function getAllBillsAPI(params) {
   // console.log("body getAllBillsAPI:>> ", page);
   const { data } = await axios.get("/api/bill", {
-    params: { page },
+    params: { ...params },
   });
   //   console.log("data :>> ", data);
   return data;
 }
 
-export async function getUserBillsAPI(userId, page) {
+export async function getUserBillsAPI(params) {
   //   console.log("body getUserBillsAPI:>> ", body);
   const { data } = await axios.get("/api/bill", {
-    params: { userId, page },
+    params: { ...params },
   });
   return data;
 }

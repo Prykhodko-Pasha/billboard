@@ -12,7 +12,7 @@ export default function TabPanel(props) {
       aria-labelledby={`simple-tab-${index}`}
       {...other}
     >
-      {value === index && <Box sx={{ padding: "24px 0 0 0" }}>{children}</Box>}
+      {value === index && <Box>{children}</Box>}
     </div>
   );
 }

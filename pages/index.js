@@ -6,14 +6,17 @@ import Box from "@mui/material/Box";
 import Pagination from "@mui/material/Pagination";
 import BillsList from "../components/billsList";
 import { getAllBillsAPI } from "../services/bills-api";
+import SortSelector from "../components/sortSelector";
 
 export default function Home({ initBills, initCount }) {
   const [page, setPage] = useState(1);
+  const [sortKey, setSortKey] = useState("id");
+  const [sortValue, setSortValue] = useState("desc");
   const [count, setCount] = useState(Math.ceil(initCount / 9));
   const [bills, setBills] = useState(initBills);
 
-  const fetchBills = async (page) => {
-    const allBills = await getAllBillsAPI(page);
+  const fetchBills = async (page, sortKey, sortValue) => {
+    const allBills = await getAllBillsAPI({ page, sortKey, sortValue });
     setBills(allBills.bills);
     setCount(Math.ceil(allBills.count / 9));
   };
@@ -21,7 +24,18 @@ export default function Home({ initBills, initCount }) {
   const handleChangePage = async (e, value) => {
     setPage(value);
     try {
-      fetchBills(value);
+      fetchBills(value, sortKey, sortValue);
+    } catch (error) {
+      console.log("error:>> ", error);
+    }
+  };
+
+  const handleChangeSort = async (sort) => {
+    const [key, value] = sort.split(" ");
+    setSortKey(key);
+    setSortValue(value);
+    try {
+      fetchBills(page, key, value);
     } catch (error) {
       console.log("error:>> ", error);
     }
@@ -37,6 +51,11 @@ export default function Home({ initBills, initCount }) {
         Welcome to Billboard!
       </Typography>
       <Divider sx={{ width: "100%", margin: "20px 0" }} />
+
+      <SortSelector
+        initSort={`${sortKey} ${sortValue}`}
+        handleChangeSort={handleChangeSort}
+      />
 
       {bills && <BillsList bills={bills} />}
 
@@ -63,7 +82,11 @@ export default function Home({ initBills, initCount }) {
 }
 
 export async function getServerSideProps() {
-  const allBills = await getAllBills(1); // page = 1
+  const allBills = await getAllBills({
+    page: 1,
+    sortKey: "id",
+    sortValue: "desc",
+  });
   return {
     props: {
       initBills: allBills.bills,

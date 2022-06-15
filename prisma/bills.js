@@ -2,13 +2,14 @@ import prisma from "./prisma";
 // import hashPassword from "../helpers/hashPassword";
 
 // READ
-export const getAllBills = async (page) => {
-  // console.log("page getAllBills:>> ", page);
+export const getAllBills = async (params) => {
+  // console.log("params getAllBills:>> ", params);
+  const { page, sortKey, sortValue } = params;
   const allBills = await prisma.bill.findMany();
   const billsCount = allBills.length;
   const takenBills = await prisma.bill.findMany({
     orderBy: {
-      id: "desc",
+      [sortKey]: sortValue,
     },
     skip: 9 * (page - 1),
     take: 9,
@@ -23,14 +24,16 @@ export const getAllBills = async (page) => {
   return { bills: takenBills, count: billsCount };
 };
 
-export const getUserBills = async ({ userId, page }) => {
+export const getUserBills = async (params) => {
+  const { userId, page, sortKey, sortValue } = params;
   const allUserBills = await prisma.bill.findMany({
     where: { authorId: userId },
   });
   const billsCount = allUserBills.length;
   const takenBills = await prisma.bill.findMany({
+    where: { authorId: userId },
     orderBy: {
-      id: "desc",
+      [sortKey]: sortValue,
     },
     skip: 9 * (page - 1),
     take: 9,

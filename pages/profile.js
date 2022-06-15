@@ -16,11 +16,14 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import { getAllUsersAPI } from "../services/users-api";
 import UsersList from "../components/usersList";
+import SortSelector from "../components/sortSelector";
 
 export default function Profile() {
   const [user, setUser] = useUserContext();
   const [billsPage, setBillsPage] = useState(1);
   const [billsCount, setBillsCount] = useState(1);
+  const [sortKey, setSortKey] = useState("id");
+  const [sortValue, setSortValue] = useState("desc");
   const [usersPage, setUsersPage] = useState(1);
   const [usersCount, setUsersCount] = useState(1);
   const [bills, setBills] = useState(null);
@@ -30,15 +33,13 @@ export default function Profile() {
 
   const handleChange = (event, newValue) => {
     setTab(newValue);
-    // setPage(1);
-    // setCount(1);
   };
 
   useEffect(() => {
     if (user)
       try {
         const { id, role } = user;
-        fetchUserBills(id, billsPage);
+        fetchUserBills(id, billsPage, sortKey, sortValue);
         if (role === "SUPERADMIN" || role === "Moderator") {
           fetchUsers(usersPage);
           setShowAllUsers(true);
@@ -48,8 +49,13 @@ export default function Profile() {
       }
   }, [user]);
 
-  const fetchUserBills = async (userId, page) => {
-    const userBills = await getUserBillsAPI(userId, page);
+  const fetchUserBills = async (userId, page, sortKey, sortValue) => {
+    const userBills = await getUserBillsAPI({
+      userId,
+      page,
+      sortKey,
+      sortValue,
+    });
     setBills(userBills.bills);
     setBillsCount(Math.ceil(userBills.count / 9));
   };
@@ -74,11 +80,12 @@ export default function Profile() {
       case 0:
         setBillsPage(value);
         try {
-          fetchUserBills(user.id, value);
+          fetchUserBills(user.id, value, sortKey, sortValue);
         } catch (error) {
           console.log("error:>> ", error);
         }
         break;
+
       case 1:
         setUsersPage(value);
         try {
@@ -87,8 +94,20 @@ export default function Profile() {
           console.log("error:>> ", error);
         }
         break;
+
       default:
         break;
+    }
+  };
+
+  const handleChangeSort = async (sort) => {
+    const [key, value] = sort.split(" ");
+    setSortKey(key);
+    setSortValue(value);
+    try {
+      fetchUserBills(user.id, billsPage, key, value);
+    } catch (error) {
+      console.log("error:>> ", error);
     }
   };
 
@@ -140,7 +159,7 @@ export default function Profile() {
       </Button>
 
       <Box sx={{ width: "100%" }}>
-        <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+        <Box sx={{ borderBottom: 1, borderColor: "divider", mb: "20px" }}>
           <Tabs
             value={tab}
             onChange={handleChange}
@@ -151,7 +170,12 @@ export default function Profile() {
             {showAllUsers && <Tab label="All users" {...a11yProps(1)} />}
           </Tabs>
         </Box>
+
         <TabPanel value={tab} index={0}>
+          <SortSelector
+            initSort={`${sortKey} ${sortValue}`}
+            handleChangeSort={handleChangeSort}
+          />
           <BillsList bills={bills} />
         </TabPanel>
         {showAllUsers && (
