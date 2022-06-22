@@ -115,7 +115,6 @@ export default function EditBill({ data }) {
           <FormControl margin="normal" sx={{ width: "50%" }}>
             <InputLabel id="category-label">Category</InputLabel>
             <Select
-              // sx={{ width: "50%" }}
               labelId="category-label"
               name="category"
               value={category}

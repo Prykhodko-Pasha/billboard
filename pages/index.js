@@ -8,6 +8,7 @@ import BillsList from "../components/billsList";
 import { getAllBillsAPI } from "../services/bills-api";
 import SortSelector from "../components/sortSelector";
 import SearchInput from "../components/searchInput";
+import MultipleSelect from "../components/multipleSelect";
 
 export default function Home({ initBills, initCount }) {
   const [page, setPage] = useState(1);
@@ -16,17 +17,30 @@ export default function Home({ initBills, initCount }) {
   const [query, setQuery] = useState("");
   const [count, setCount] = useState(Math.ceil(initCount / 9));
   const [bills, setBills] = useState(initBills);
+  const [categories, setCategories] = useState([]);
 
   useEffect(() => {
     try {
-      fetchBills(page, sortKey, sortValue, query);
+      fetchBills(page, sortKey, sortValue, query, categories);
     } catch (error) {
       console.log("error:>> ", error);
     }
-  }, [page, sortKey, sortValue, query]);
+  }, [page, sortKey, sortValue, query, categories]);
 
-  const fetchBills = async (page, sortKey, sortValue, search = "") => {
-    const allBills = await getAllBillsAPI({ page, sortKey, sortValue, search });
+  const fetchBills = async (
+    page,
+    sortKey,
+    sortValue,
+    search = "",
+    categories
+  ) => {
+    const allBills = await getAllBillsAPI({
+      page,
+      sortKey,
+      sortValue,
+      search,
+      categories,
+    });
     setBills(allBills.bills);
     setCount(Math.ceil(allBills.count / 9));
     if (page > 1 && allBills.bills.length === 0) setPage(1);
@@ -57,13 +71,22 @@ export default function Home({ initBills, initCount }) {
       </Typography>
       <Divider sx={{ width: "100%", margin: "20px 0 8px" }} />
 
-      <Box sx={{ width: "100%", display: "flex" }}>
+      <Box
+        sx={{
+          width: "100%",
+          display: "flex",
+          justifyContent: "space-between",
+          mb: "24px",
+        }}
+      >
         <SearchInput onEnter={handleSearch} />
 
         <SortSelector
           initSort={`${sortKey} ${sortValue}`}
           handleChangeSort={handleChangeSort}
         />
+
+        <MultipleSelect categories={categories} setCategories={setCategories} />
       </Box>
 
       {bills && <BillsList bills={bills} />}
@@ -96,10 +119,11 @@ export async function getServerSideProps() {
     sortKey: "id",
     sortValue: "desc",
     search: "",
+    categories: [],
   });
   return {
     props: {
-      initBills: allBills.bills,
+      initBills: JSON.parse(JSON.stringify(allBills.bills)),
       initCount: allBills.count,
     },
   };

@@ -1,10 +1,18 @@
 import prisma from "./prisma";
-// import hashPassword from "../helpers/hashPassword";
+import categoriesList from "../helpers/categories";
 
 // READ
 export const getAllBills = async (params) => {
   // console.log("params getAllBills:>> ", params);
-  const { page, sortKey, sortValue, search } = params;
+  const {
+    page,
+    sortKey,
+    sortValue,
+    search,
+    "categories[]": categories,
+  } = params;
+  const filteredCategories = categories ? categories : categoriesList;
+
   const allBills = await prisma.bill.findMany({
     where: {
       OR: [
@@ -21,9 +29,11 @@ export const getAllBills = async (params) => {
           },
         },
       ],
+      category: { in: filteredCategories },
     },
   });
   const billsCount = allBills.length;
+
   const takenBills = await prisma.bill.findMany({
     where: {
       OR: [
@@ -40,6 +50,7 @@ export const getAllBills = async (params) => {
           },
         },
       ],
+      category: { in: filteredCategories },
     },
     orderBy: {
       [sortKey]: sortValue,
@@ -52,6 +63,7 @@ export const getAllBills = async (params) => {
       text: true,
       category: true,
       author: { select: { id: true, email: true } },
+      createdAt: true,
     },
   });
   return { bills: takenBills, count: billsCount };
@@ -59,7 +71,16 @@ export const getAllBills = async (params) => {
 
 export const getUserBills = async (params) => {
   // console.log("params getUserBills:>> ", params);
-  const { userId, page, sortKey, sortValue, search } = params;
+  const {
+    userId,
+    page,
+    sortKey,
+    sortValue,
+    search,
+    "categories[]": categories,
+  } = params;
+  const filteredCategories = categories ? categories : categoriesList;
+
   const allUserBills = await prisma.bill.findMany({
     where: {
       OR: [
@@ -77,6 +98,7 @@ export const getUserBills = async (params) => {
         },
       ],
       authorId: userId,
+      category: { in: filteredCategories },
     },
   });
   const billsCount = allUserBills.length;
@@ -97,6 +119,7 @@ export const getUserBills = async (params) => {
         },
       ],
       authorId: userId,
+      category: { in: filteredCategories },
     },
     orderBy: {
       [sortKey]: sortValue,
@@ -109,6 +132,7 @@ export const getUserBills = async (params) => {
       text: true,
       category: true,
       author: { select: { id: true, email: true } },
+      createdAt: true,
     },
   });
   // console.log("takenBills :>> ", takenBills);
@@ -124,6 +148,7 @@ export const getBill = async (id) => {
       text: true,
       category: true,
       author: { select: { id: true, email: true } },
+      createdAt: true,
     },
   });
   return bill;

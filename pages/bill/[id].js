@@ -14,9 +14,11 @@ import { useUserContext } from "../../context/provider";
 import isAllowedEditing from "../../helpers/isAllowedEditing";
 import { deleteBillAPI } from "../../services/bills-api";
 import MyCKEditor from "../../components/CKEditor";
+import transformDateFormat from "../../helpers/transformDateFormat";
 
 export default function Bill({ data }) {
-  const { id, title, text, category, author } = data;
+  const { id, title, text, category, author, createdAt } = data;
+  const formattedDate = transformDateFormat(createdAt);
 
   const [user, setUser] = useUserContext();
 
@@ -33,7 +35,6 @@ export default function Bill({ data }) {
   return (
     <>
       <Button
-        // variant="outlined"
         size="large"
         sx={{
           alignSelf: "flex-start",
@@ -103,13 +104,26 @@ export default function Bill({ data }) {
             {category}
           </Typography>
 
-          <div className="card_text">
+          <div className="bill_text">
             <MyCKEditor text={text} id={id} editable={false} />
           </div>
 
-          <Typography sx={{ color: "#ccc" }} align="right">
-            Author: {author.email}
-          </Typography>
+          <Box
+            sx={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              mt: "16px",
+            }}
+          >
+            <Typography sx={{ color: "#ccc" }} align="left">
+              {formattedDate}
+            </Typography>
+            <Typography sx={{ color: "#ccc" }} align="right">
+              Author: {author.email}
+            </Typography>
+          </Box>
         </CardContent>
       </Card>
     </>
@@ -123,7 +137,7 @@ export async function getServerSideProps(context) {
   const billData = await getBill(id);
   return {
     props: {
-      data: billData,
+      data: JSON.parse(JSON.stringify(billData)),
     },
   };
 }

@@ -9,7 +9,7 @@ import Container from "@mui/material/Container";
 import InputLabel from "@mui/material/InputLabel";
 import InputAdornment from "@mui/material/InputAdornment";
 import FormControl from "@mui/material/FormControl";
-import OutlinedInput from "@mui/material/OutlinedInput";
+import FilledInput from "@mui/material/FilledInput";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { addUserAPI } from "../services/users-api";
@@ -103,6 +103,7 @@ export default function Registratoin() {
         >
           <TextField
             margin="normal"
+            variant="filled"
             required
             fullWidth
             id="name"
@@ -115,6 +116,7 @@ export default function Registratoin() {
 
           <TextField
             margin="normal"
+            variant="filled"
             required
             fullWidth
             id="email"
@@ -125,11 +127,11 @@ export default function Registratoin() {
             onChange={handleChange}
           />
 
-          <FormControl margin="normal" variant="outlined" fullWidth required>
+          <FormControl margin="normal" variant="filled" fullWidth required>
             <InputLabel htmlFor="outlined-adornment-password">
               Password
             </InputLabel>
-            <OutlinedInput
+            <FilledInput
               id="outlined-adornment-password"
               type={showPassword ? "text" : "password"}
               name="password"

@@ -18,6 +18,7 @@ import { getAllUsersAPI } from "../services/users-api";
 import UsersList from "../components/usersList";
 import SortSelector from "../components/sortSelector";
 import SearchInput from "../components/searchInput";
+import MultipleSelect from "../components/multipleSelect";
 
 export default function Profile() {
   const [user, setUser] = useUserContext();
@@ -32,6 +33,7 @@ export default function Profile() {
   const [tab, setTab] = useState(0);
   const [showAllUsers, setShowAllUsers] = useState(false);
   const [query, setQuery] = useState("");
+  const [categories, setCategories] = useState([]);
 
   const handleChange = (event, newValue) => {
     setTab(newValue);
@@ -48,20 +50,35 @@ export default function Profile() {
     if (user)
       try {
         tab === 0 &&
-          fetchUserBills(user.id, billsPage, sortKey, sortValue, query);
+          fetchUserBills(
+            user.id,
+            billsPage,
+            sortKey,
+            sortValue,
+            query,
+            categories
+          );
         tab === 1 && fetchUsers(usersPage, query);
       } catch (error) {
         console.log("error:>> ", error);
       }
-  }, [user, billsPage, sortKey, sortValue, tab, usersPage, query]);
+  }, [user, billsPage, sortKey, sortValue, tab, usersPage, query, categories]);
 
-  const fetchUserBills = async (userId, page, sortKey, sortValue, search) => {
+  const fetchUserBills = async (
+    userId,
+    page,
+    sortKey,
+    sortValue,
+    search,
+    categories
+  ) => {
     const userBills = await getUserBillsAPI({
       userId,
       page,
       sortKey,
       sortValue,
       search,
+      categories,
     });
     setBills(userBills.bills);
     setBillsCount(Math.ceil(userBills.count / 9));
@@ -169,13 +186,28 @@ export default function Profile() {
           </Tabs>
         </Box>
 
-        <Box sx={{ width: "100%", display: "flex" }}>
+        <Box
+          sx={{
+            width: "100%",
+            display: "flex",
+            justifyContent: "space-between",
+            mb: "24px",
+          }}
+        >
           <SearchInput onEnter={handleSearch} />
+
           {tab === 0 && (
-            <SortSelector
-              initSort={`${sortKey} ${sortValue}`}
-              handleChangeSort={handleChangeSort}
-            />
+            <>
+              <SortSelector
+                initSort={`${sortKey} ${sortValue}`}
+                handleChangeSort={handleChangeSort}
+              />
+
+              <MultipleSelect
+                categories={categories}
+                setCategories={setCategories}
+              />
+            </>
           )}
         </Box>
 

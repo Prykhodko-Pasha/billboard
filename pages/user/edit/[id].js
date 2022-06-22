@@ -23,7 +23,6 @@ export default function EditUser({ data }) {
   const [role, setRole] = useState(initRole);
 
   useEffect(() => {
-    // if (!user) Router.push("/login");
     user &&
       !isAllowedEditing(id, user?.id, user?.role) &&
       Router.push("/profile");
@@ -46,7 +45,6 @@ export default function EditUser({ data }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // const authorId = getCookies("user").id;
       const credentials = { id, name, email, role };
       const user = await updateUserAPI(credentials);
       if (user) Router.back();

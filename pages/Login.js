@@ -9,9 +9,9 @@ import Container from "@mui/material/Container";
 import InputLabel from "@mui/material/InputLabel";
 import InputAdornment from "@mui/material/InputAdornment";
 import FormControl from "@mui/material/FormControl";
-import OutlinedInput from "@mui/material/OutlinedInput";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import FilledInput from "@mui/material/FilledInput";
 import { loginUserAPI } from "../services/users-api";
 import { useUserContext } from "../context/provider";
 import { setCookies } from "../helpers/cookies";
@@ -114,13 +114,14 @@ export default function LoginPage() {
             value={email}
             autoComplete="email"
             onChange={handleChange}
+            variant="filled"
           />
 
-          <FormControl margin="normal" variant="outlined" fullWidth required>
+          <FormControl margin="normal" variant="filled" fullWidth required>
             <InputLabel htmlFor="outlined-adornment-password">
               Password
             </InputLabel>
-            <OutlinedInput
+            <FilledInput
               id="outlined-adornment-password"
               type={showPassword ? "text" : "password"}
               name="password"
@@ -149,7 +150,6 @@ export default function LoginPage() {
             sx={{
               margin: "0 auto",
               mt: 3,
-              // mb: 2,
             }}
           >
             Login

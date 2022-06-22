@@ -1,11 +1,4 @@
-import {
-  createUser,
-  deleteUser,
-  findUser,
-  // getAllUsers,
-  getUser,
-  updateUser,
-} from "../../prisma/users";
+import { findUser, updateUser } from "../../prisma/users";
 import isPasswordMatching from "../../helpers/isPasswordMatching";
 import { createToken, verifyToken } from "../../helpers/tokenOperations";
 
@@ -63,7 +56,7 @@ export default async function handle(req, res) {
         //   });
 
         // Token verifying and updating
-        console.log("req api auth:>> ", req);
+        // console.log("req api auth:>> ", req);
         const { id, ...userData } = await verifyToken(req);
         const updateData = { ...userData, token: null };
         await updateUser(id, updateData);

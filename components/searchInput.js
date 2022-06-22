@@ -17,8 +17,8 @@ export default function SearchInput({ onEnter }) {
 
   return (
     <TextField
-      variant="standard"
-      sx={{ width: "30%", m: "0 16px 24px 0" }}
+      variant="filled"
+      sx={{ width: "32%" }}
       label="Search"
       value={search}
       onChange={handleChange}

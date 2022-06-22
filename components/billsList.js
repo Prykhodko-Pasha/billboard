@@ -12,6 +12,7 @@ import isAllowedEditing from "../helpers/isAllowedEditing";
 import { deleteBillAPI } from "../services/bills-api";
 import { useUserContext } from "../context/provider";
 import MyCKEditor from "./CKEditor";
+import transformDateFormat from "../helpers/transformDateFormat";
 
 export default function BillsList({ bills }) {
   const [user, setUser] = useUserContext();
@@ -27,110 +28,123 @@ export default function BillsList({ bills }) {
     }
   };
 
-  return (
-    Array.isArray(bills) && (
-      <Box sx={{ width: "95%", margin: "0 auto" }}>
-        <Grid container spacing={2}>
-          {bills.map((bill, index) => {
-            const { id, title, text, category, author } = bill;
-            return (
-              <Grid
-                item
-                sx={{ minWidth: "130px" }}
-                xs={12}
-                md={6}
-                lg={4}
-                key={index}
-              >
-                <Link href={`/bill/${id}`}>
-                  <Card
+  return bills?.length !== 0 ? (
+    <Box sx={{ width: "95%", margin: "0 auto" }}>
+      <Grid container spacing={2}>
+        {bills?.map((bill, index) => {
+          const { id, title, text, category, author, createdAt } = bill;
+          const formattedDate = transformDateFormat(createdAt);
+
+          return (
+            <Grid
+              item
+              sx={{ minWidth: "130px" }}
+              xs={12}
+              md={6}
+              lg={4}
+              key={index}
+            >
+              <Link href={`/bill/${id}`}>
+                <Card
+                  sx={{
+                    height: "250px",
+                    cursor: "pointer",
+                    "&:hover": {
+                      boxShadow: "0px 10px 20px 2px rgba(0, 0, 0, 0.25)",
+                    },
+                  }}
+                >
+                  <CardContent
                     sx={{
-                      height: "250px",
-                      cursor: "pointer",
-                      "&:hover": {
-                        boxShadow: "0px 10px 20px 2px rgba(0, 0, 0, 0.25)",
-                      },
+                      height: "100%",
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "space-between",
                     }}
                   >
-                    <CardContent
-                      sx={{
-                        height: "100%",
-                        display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "space-between",
-                      }}
-                    >
-                      <div>
-                        <Box
-                          sx={{
-                            width: "100%",
-                            display: "flex",
-                            justifyContent: "space-between",
-                            alignItems: "center",
-                          }}
-                        >
-                          <Typography variant="h5" align="left">
-                            {title}
-                          </Typography>
+                    <div>
+                      <Box
+                        sx={{
+                          width: "100%",
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                        }}
+                      >
+                        <Typography variant="h5" align="left">
+                          {title}
+                        </Typography>
 
-                          {isAllowedEditing(
-                            author.id,
-                            user?.id,
-                            user?.role
-                          ) && (
-                            <div>
-                              <Link href={`/bill/edit/${id}`}>
-                                <IconButton
-                                  aria-label="edit"
-                                  size="large"
-                                  align="right"
-                                  sx={{
-                                    "&:hover": {
-                                      backgroundColor: "#3498db",
-                                      color: "#fff",
-                                    },
-                                  }}
-                                >
-                                  <EditIcon />
-                                </IconButton>
-                              </Link>
+                        {isAllowedEditing(author.id, user?.id, user?.role) && (
+                          <div>
+                            <Link href={`/bill/edit/${id}`}>
                               <IconButton
-                                aria-label="delete"
+                                aria-label="edit"
                                 size="large"
                                 align="right"
                                 sx={{
                                   "&:hover": {
-                                    backgroundColor: "#d32f2f",
+                                    backgroundColor: "#3498db",
                                     color: "#fff",
                                   },
                                 }}
-                                id={id}
-                                onClick={(e) => handleDelete(e)}
                               >
-                                <DeleteIcon />
+                                <EditIcon />
                               </IconButton>
-                            </div>
-                          )}
-                        </Box>
-                        <Typography mb={1} sx={{ color: "#ccc" }} align="left">
-                          {category}
-                        </Typography>
+                            </Link>
+                            <IconButton
+                              aria-label="delete"
+                              size="large"
+                              align="right"
+                              sx={{
+                                "&:hover": {
+                                  backgroundColor: "#d32f2f",
+                                  color: "#fff",
+                                },
+                              }}
+                              id={id}
+                              onClick={(e) => handleDelete(e)}
+                            >
+                              <DeleteIcon />
+                            </IconButton>
+                          </div>
+                        )}
+                      </Box>
+                      <Typography mb={1} sx={{ color: "#ccc" }} align="left">
+                        {category}
+                      </Typography>
 
-                        <div className="card_text">
-                          <MyCKEditor text={text} id={index} editable={false} />
-                        </div>
+                      <div className="card_text">
+                        <MyCKEditor text={text} id={index} editable={false} />
                       </div>
+                    </div>
+                    <Box
+                      sx={{
+                        width: "100%",
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        mt: "16px",
+                      }}
+                    >
+                      <Typography sx={{ color: "#ccc" }} align="left">
+                        {formattedDate}
+                      </Typography>
                       <Typography sx={{ color: "#ccc" }} align="right">
                         Author: {author.email}
                       </Typography>
-                    </CardContent>
-                  </Card>
-                </Link>
-              </Grid>
-            );
-          })}
-        </Grid>
-      </Box>
-    )
+                    </Box>
+                  </CardContent>
+                </Card>
+              </Link>
+            </Grid>
+          );
+        })}
+      </Grid>
+    </Box>
+  ) : (
+    <Typography variant="h5" align="center">
+      There are no bills &#128533;
+    </Typography>
   );
 }

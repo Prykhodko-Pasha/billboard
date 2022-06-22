@@ -108,7 +108,6 @@ export default function CreateBill() {
           <FormControl margin="normal" sx={{ width: "50%" }}>
             <InputLabel id="category-label">Category</InputLabel>
             <Select
-              // sx={{ width: "50%" }}
               labelId="category-label"
               name="category"
               value={category}
@@ -123,17 +122,36 @@ export default function CreateBill() {
             </Select>
           </FormControl>
 
-          <Button
-            type="submit"
-            variant="contained"
-            size="large"
+          <Box
             sx={{
-              margin: "0 auto",
-              mt: 3,
+              width: "100%",
+              display: "flex",
+              justifyContent: "space-between",
             }}
           >
-            Create
-          </Button>
+            <Button
+              variant="outlined"
+              size="large"
+              sx={{
+                margin: "0 auto",
+                mt: 3,
+              }}
+              onClick={() => Router.back()}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              variant="contained"
+              size="large"
+              sx={{
+                margin: "0 auto",
+                mt: 3,
+              }}
+            >
+              Create
+            </Button>
+          </Box>
         </Box>
       </Box>
     </Container>
