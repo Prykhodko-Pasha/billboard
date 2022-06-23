@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Router from "next/router";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -12,15 +12,18 @@ import FormControl from "@mui/material/FormControl";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import FilledInput from "@mui/material/FilledInput";
+import FormHelperText from "@mui/material/FormHelperText";
 import { loginUserAPI } from "../services/users-api";
 import { useUserContext } from "../context/provider";
 import { setCookies } from "../helpers/cookies";
+import { loginSchema } from "../helpers/validation";
 
 export default function LoginPage() {
+  const [user, setUser] = useUserContext();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [user, setUser] = useUserContext();
+  const [error, setError] = useState(null);
 
   const handleChange = (e) => {
     const { name, value } = e.currentTarget;
@@ -36,8 +39,26 @@ export default function LoginPage() {
     }
   };
 
+  useEffect(() => {
+    if (!email && !password) return; // skip the first render
+    const formData = { email, password };
+    const errors = {};
+    loginSchema
+      .validate(formData, { abortEarly: false })
+      .then(() => {
+        setError(null);
+      })
+      .catch((err) => {
+        err.inner.forEach(({ path, message }) => {
+          errors[path] = message;
+        });
+        setError(errors);
+      });
+  }, [email, password]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (error) return;
     try {
       const credentials = { email, password };
       const user = await loginUserAPI(credentials);
@@ -115,9 +136,17 @@ export default function LoginPage() {
             autoComplete="email"
             onChange={handleChange}
             variant="filled"
+            error={Boolean(error?.email)}
+            helperText={error?.email}
           />
 
-          <FormControl margin="normal" variant="filled" fullWidth required>
+          <FormControl
+            margin="normal"
+            variant="filled"
+            fullWidth
+            required
+            error={Boolean(error?.password)}
+          >
             <InputLabel htmlFor="outlined-adornment-password">
               Password
             </InputLabel>
@@ -141,6 +170,7 @@ export default function LoginPage() {
               }
               label="Password_"
             />
+            <FormHelperText>{error?.password}</FormHelperText>
           </FormControl>
 
           <Button

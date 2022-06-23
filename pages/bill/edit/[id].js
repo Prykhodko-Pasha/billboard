@@ -166,13 +166,12 @@ export default function EditBill({ data }) {
 }
 
 export async function getServerSideProps(context) {
-  const { params } = context;
-  const { id } = params;
+  const { id } = context.params;
   if (!id) return null;
   const billData = await getBill(id);
   return {
     props: {
-      data: billData,
+      data: JSON.parse(JSON.stringify(billData)),
     },
   };
 }

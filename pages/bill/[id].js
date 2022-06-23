@@ -131,7 +131,6 @@ export default function Bill({ data }) {
 }
 
 export async function getServerSideProps(context) {
-  //   const { params } = context;
   const { id } = context.params;
   if (!id) return null;
   const billData = await getBill(id);

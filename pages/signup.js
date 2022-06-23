@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Router from "next/router";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -12,13 +12,33 @@ import FormControl from "@mui/material/FormControl";
 import FilledInput from "@mui/material/FilledInput";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import FormHelperText from "@mui/material/FormHelperText";
 import { addUserAPI } from "../services/users-api";
+import { signupSchema } from "../helpers/validation";
 
 export default function Registratoin() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    if (!email && !password) return; // skip the first render
+    const formData = { name, email, password };
+    const errors = {};
+    signupSchema
+      .validate(formData, { abortEarly: false })
+      .then(() => {
+        setError(null);
+      })
+      .catch((err) => {
+        err.inner.forEach(({ path, message }) => {
+          errors[path] = message;
+        });
+        setError(errors);
+      });
+  }, [name, email, password]);
 
   const handleChange = (e) => {
     const { name, value } = e.currentTarget;
@@ -39,6 +59,7 @@ export default function Registratoin() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (error) return;
     try {
       const credentials = { name, email, password };
       const user = await addUserAPI(credentials);
@@ -112,6 +133,8 @@ export default function Registratoin() {
             value={name}
             autoFocus
             onChange={handleChange}
+            error={Boolean(error?.name)}
+            helperText={error?.name}
           />
 
           <TextField
@@ -125,9 +148,17 @@ export default function Registratoin() {
             value={email}
             autoComplete="email"
             onChange={handleChange}
+            error={Boolean(error?.email)}
+            helperText={error?.email}
           />
 
-          <FormControl margin="normal" variant="filled" fullWidth required>
+          <FormControl
+            margin="normal"
+            variant="filled"
+            fullWidth
+            required
+            error={Boolean(error?.password)}
+          >
             <InputLabel htmlFor="outlined-adornment-password">
               Password
             </InputLabel>
@@ -151,27 +182,22 @@ export default function Registratoin() {
               }
               label="Password_"
             />
+            <FormHelperText>{error?.password}</FormHelperText>
           </FormControl>
 
           <Button
             type="submit"
             variant="contained"
             size="large"
-            sx={{
-              margin: "0 auto",
-              mt: 3,
-            }}
+            sx={{ m: "24px auto 0" }}
           >
             Register
           </Button>
+
           <Button
             variant="outlined"
             size="large"
-            sx={{
-              margin: "0 auto",
-              mt: 3,
-              mb: 2,
-            }}
+            sx={{ m: "24px auto 16px" }}
             onClick={handleLogin}
           >
             Login
