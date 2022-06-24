@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Router from "next/router";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -9,26 +9,39 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
+import FormHelperText from "@mui/material/FormHelperText";
 import { addBillAPI } from "../../../services/bills-api";
 import { useUserContext } from "../../../context/provider";
 import MyCKEditor from "../../../components/CKEditor";
 import categories from "../../../helpers/categories";
+import { billSchema } from "../../../helpers/validation";
 
 export default function CreateBill() {
   const [user, setUser] = useUserContext();
   const [title, setTitle] = useState("");
   const [text, setText] = useState(null);
   const [category, setCategory] = useState("");
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    if (!title && !text && !category) return; // skip the first render
+    const formData = { title, text, category };
+    const errors = {};
+    billSchema
+      .validate(formData, { abortEarly: false })
+      .then(() => {
+        setError(null);
+      })
+      .catch((err) => {
+        err.inner.forEach(({ path, message }) => {
+          errors[path] = message;
+        });
+        setError(errors);
+      });
+  }, [title, text, category]);
 
   const handleChange = (e) => {
-    const { name, value } = e.currentTarget;
-    switch (name) {
-      case "title":
-        setTitle(value);
-        break;
-      default:
-        return;
-    }
+    setTitle(e.currentTarget.value);
   };
 
   const handleEditorChange = (editorState) => {
@@ -99,13 +112,26 @@ export default function CreateBill() {
             value={title}
             autoFocus
             onChange={handleChange}
+            error={Boolean(error?.title)}
+            helperText={error?.title}
           />
 
-          <div className="editor">
-            <MyCKEditor onEditorChange={handleEditorChange} editable={true} />
-          </div>
+          <FormControl fullWidth error={Boolean(error?.text)}>
+            <div
+              className={
+                Boolean(error?.text) ? "editor editor_error" : "editor"
+              }
+            >
+              <MyCKEditor onEditorChange={handleEditorChange} editable={true} />
+            </div>
+            <FormHelperText>{error?.text}</FormHelperText>
+          </FormControl>
 
-          <FormControl margin="normal" sx={{ width: "50%" }}>
+          <FormControl
+            margin="normal"
+            sx={{ width: "50%" }}
+            error={Boolean(error?.category)}
+          >
             <InputLabel id="category-label">Category</InputLabel>
             <Select
               labelId="category-label"
@@ -120,6 +146,7 @@ export default function CreateBill() {
                 </MenuItem>
               ))}
             </Select>
+            <FormHelperText>{error?.category}</FormHelperText>
           </FormControl>
 
           <Box

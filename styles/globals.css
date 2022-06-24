@@ -24,6 +24,10 @@ a {
   width: 100%;
   --ck-border-radius: 4px;
 }
+.editor.editor_error {
+  --ck-color-base-border: #d32f2f;
+  --ck-color-toolbar-border: #d32f2f;
+  }
 
 .editor .ck-content {
   min-height: 240px;

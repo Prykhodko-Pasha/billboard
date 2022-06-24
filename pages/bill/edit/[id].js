@@ -9,12 +9,14 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
+import FormHelperText from "@mui/material/FormHelperText";
 import { updateBillAPI } from "../../../services/bills-api";
 import { getBill } from "../../../prisma/bills";
 import { useUserContext } from "../../../context/provider";
 import isAllowedEditing from "../../../helpers/isAllowedEditing";
 import MyCKEditor from "../../../components/CKEditor";
 import categories from "../../../helpers/categories";
+import { billSchema } from "../../../helpers/validation";
 
 export default function EditBill({ data }) {
   const {
@@ -29,12 +31,30 @@ export default function EditBill({ data }) {
   const [title, setTitle] = useState(initTitle || "");
   const [text, setText] = useState(initText);
   const [category, setCategory] = useState(initCategory);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     user &&
       !isAllowedEditing(author.id, user?.id, user?.role) &&
       Router.push("/profile");
   }, [user]);
+
+  useEffect(() => {
+    // if (!title && !text && !category) return; // skip the first render
+    const formData = { title, text, category };
+    const errors = {};
+    billSchema
+      .validate(formData, { abortEarly: false })
+      .then(() => {
+        setError(null);
+      })
+      .catch((err) => {
+        err.inner.forEach(({ path, message }) => {
+          errors[path] = message;
+        });
+        setError(errors);
+      });
+  }, [title, text, category]);
 
   const handleChange = (e) => {
     setTitle(e.currentTarget.value);
@@ -102,15 +122,25 @@ export default function EditBill({ data }) {
             value={title}
             autoFocus
             onChange={handleChange}
+            error={Boolean(error?.title)}
+            helperText={error?.title}
           />
 
-          <div className="editor">
-            <MyCKEditor
-              text={text}
-              editable={true}
-              onEditorChange={handleEditorChange}
-            />
-          </div>
+          <FormControl fullWidth error={Boolean(error?.text)}>
+            <div
+              className={
+                Boolean(error?.text) ? "editor editor_error" : "editor"
+              }
+            >
+              {" "}
+              <MyCKEditor
+                text={text}
+                editable={true}
+                onEditorChange={handleEditorChange}
+              />
+            </div>
+            <FormHelperText>{error?.text}</FormHelperText>
+          </FormControl>
 
           <FormControl margin="normal" sx={{ width: "50%" }}>
             <InputLabel id="category-label">Category</InputLabel>
@@ -127,6 +157,7 @@ export default function EditBill({ data }) {
                 </MenuItem>
               ))}
             </Select>
+            <FormHelperText>{error?.category}</FormHelperText>
           </FormControl>
 
           <Box

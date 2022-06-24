@@ -24,7 +24,7 @@ export default function Registratoin() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (!email && !password) return; // skip the first render
+    if (!name && !email && !password) return; // skip the first render
     const formData = { name, email, password };
     const errors = {};
     signupSchema
