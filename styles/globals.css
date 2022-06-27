@@ -39,7 +39,12 @@ a {
   border-right: none;
   border-bottom: none;
 }
-.card_text .ck.ck-editor__main>.ck-editor__editable:not(.ck-focused){
+.card_text .ck.ck-editor__main>.ck-editor__editable:not(.ck-focused),
+.card_text {
   height: 96px;
   overflow: hidden;
+  border-top: none;
+}
+.card_text div {
+  border-top: 1px solid #c4c4c4;
 }

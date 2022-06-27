@@ -8,16 +8,15 @@ import { useUserContext } from "../context/provider";
 
 export default function AppBar() {
   const [user, setUser] = useUserContext();
-  const [activeLink, setActiveLink] = useState("");
-  useEffect(() => {
-    setActiveLink(Router.pathname);
-  }, []);
+  const [activeLink, setActiveLink] = useState("/");
 
   useEffect(() => {
     if (user) {
       Router.pathname === "/" ? setActiveLink("/") : setActiveLink("/profile");
     } else {
-      setActiveLink("/login");
+      Router.pathname === "/profile"
+        ? setActiveLink("/login")
+        : setActiveLink(Router.pathname);
     }
   }, [user]);
 
