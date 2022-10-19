@@ -45,7 +45,8 @@ export default function UsersList({ users }) {
                     sx={{
                       display: "flex",
                       justifyContent: "space-between",
-                      minWidth: 251,
+                      minWidth: 250,
+                      minHeight: 250,
                       cursor: "pointer",
                       "&:hover": {
                         boxShadow: "0px 10px 20px 2px rgba(0, 0, 0, 0.25)",
@@ -114,12 +115,14 @@ export default function UsersList({ users }) {
                         </div>
                       </CardContent>
                     </Box>
-                    <CardMedia
-                      component="img"
-                      sx={{ width: 251 }}
-                      image="/avatar.png"
-                      alt="me"
-                    />
+                    <Box sx={{ display: "flex", alignContent: "center" }}>
+                      <CardMedia
+                        component="img"
+                        sx={{ width: "100%" }}
+                        image="/avatar.png"
+                        alt="me"
+                      />
+                    </Box>
                   </Card>
                 </Link>
               </Grid>

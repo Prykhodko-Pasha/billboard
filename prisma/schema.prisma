@@ -15,6 +15,7 @@ model User {
   role      String
   token     String?
   bills     Bill[]
+  comments  Comment[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
