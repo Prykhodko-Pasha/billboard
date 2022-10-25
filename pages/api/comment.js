@@ -5,6 +5,7 @@ import {
   updateComment,
   deleteComment,
   getComments,
+  findComment,
 } from "../../prisma/comments";
 
 export default async function handle(req, res) {
@@ -49,7 +50,7 @@ export default async function handle(req, res) {
         // Is comment existing?
         // console.log("req.query :>> ", req.query);
         const { commentId } = req.query;
-        const comment = await findcomment(commentId);
+        const comment = await findComment(commentId);
         // console.log("comment :>> ", comment);
         if (!comment)
           return res.status(404).json({

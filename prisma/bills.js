@@ -154,7 +154,7 @@ export const getBill = async (id) => {
   return bill;
 };
 
-export const findbill = async (id) => {
+export const findBill = async (id) => {
   const bill = await prisma.bill.findUnique({
     where: { id },
   });

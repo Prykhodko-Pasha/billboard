@@ -1,4 +1,4 @@
-export default function transformDateFormat(date) {
+export default function transformDateFormat(date, withTime = false) {
   const newDate = new Date(date);
 
   const appendZero = (n) => {
@@ -8,12 +8,11 @@ export default function transformDateFormat(date) {
     return n;
   };
 
-  const formattedDate =
-    appendZero(newDate.getDate()) +
-    "." +
-    appendZero(newDate.getMonth() + 1) +
-    "." +
-    newDate.getFullYear();
+  const formattedDate = `${appendZero(newDate.getDate())}.${appendZero(
+    newDate.getMonth() + 1
+  )}.${newDate.getFullYear()} ${
+    withTime ? " " + newDate.getHours() + ":" + newDate.getMinutes() : ""
+  }`;
 
   return formattedDate;
 }

@@ -5,7 +5,7 @@ import {
   getUserBills,
   getAllBills,
   updateBill,
-  findbill,
+  findBill,
   deleteBill,
 } from "../../prisma/bills";
 
@@ -56,7 +56,7 @@ export default async function handle(req, res) {
         // Is bill existing?
         // console.log("req.query :>> ", req.query);
         const { billId } = req.query;
-        const bill = await findbill(billId);
+        const bill = await findBill(billId);
         // console.log("bill :>> ", bill);
         if (!bill)
           return res.status(404).json({

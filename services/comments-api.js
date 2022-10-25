@@ -23,11 +23,11 @@ export async function addCommentAPI(body) {
   return data;
 }
 
-export async function updateCommentAPI(body) {
-  //   console.log("commentId getCommentAPI:>> ", body);
-  const { data } = await axios.patch(`/api/comment`, body);
-  return data;
-}
+// export async function updateCommentAPI(body) {
+//   //   console.log("commentId getCommentAPI:>> ", body);
+//   const { data } = await axios.patch(`/api/comment`, body);
+//   return data;
+// }
 
 export async function deleteCommentAPI(commentId) {
   // console.log("commentId deleteCommentAPI:>> ", commentId);

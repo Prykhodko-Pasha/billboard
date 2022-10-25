@@ -76,7 +76,7 @@ export default function BillsList({ bills }) {
                         </Typography>
 
                         {isAllowedEditing(author.id, user?.id, user?.role) && (
-                          <div>
+                          <Box sx={{ display: "flex", ml: 1 }}>
                             <Link href={`/bill/edit/${id}`}>
                               <IconButton
                                 aria-label="edit"
@@ -107,7 +107,7 @@ export default function BillsList({ bills }) {
                             >
                               <DeleteIcon />
                             </IconButton>
-                          </div>
+                          </Box>
                         )}
                       </Box>
                       <Typography mb={1} sx={{ color: "#ccc" }} align="left">

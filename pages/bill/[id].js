@@ -24,7 +24,11 @@ import isAllowedEditing from "../../helpers/isAllowedEditing";
 import { deleteBillAPI } from "../../services/bills-api";
 import MyCKEditor from "../../components/CKEditor";
 import transformDateFormat from "../../helpers/transformDateFormat";
-import { addCommentAPI, getCommentsAPI } from "../../services/comments-api";
+import {
+  addCommentAPI,
+  deleteCommentAPI,
+  getCommentsAPI,
+} from "../../services/comments-api";
 import { getComments } from "../../prisma/comments";
 
 export default function Bill({ billData, commentsData }) {
@@ -36,7 +40,7 @@ export default function Bill({ billData, commentsData }) {
   const [comments, setComments] = useState(commentsData);
   const [error, setError] = useState(null);
 
-  const handleDelete = async (e) => {
+  const handleDeleteBill = async (e) => {
     try {
       const billId = e.currentTarget.id;
       const bill = await deleteBillAPI(billId);
@@ -53,11 +57,25 @@ export default function Bill({ billData, commentsData }) {
       const billId = id;
       const credentials = { text: comment, authorId, billId };
       const newComment = await addCommentAPI(credentials);
-      console.log("newComment :>> ", newComment);
+      // console.log("newComment :>> ", newComment);
       if (newComment) {
         const refreshedComments = await getCommentsAPI(id);
         setComments(refreshedComments);
         setComment("");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleDeleteComment = async (e) => {
+    e.preventDefault();
+    try {
+      const commentId = e.currentTarget.id;
+      const deletedComment = await deleteCommentAPI(commentId);
+      if (deletedComment) {
+        const refreshedComments = await getCommentsAPI(id);
+        setComments(refreshedComments);
       }
     } catch (error) {
       console.error(error);
@@ -127,7 +145,7 @@ export default function Bill({ billData, commentsData }) {
                     },
                   }}
                   id={id}
-                  onClick={(e) => handleDelete(e)}
+                  onClick={(e) => handleDeleteBill(e)}
                 >
                   <DeleteIcon />
                 </IconButton>
@@ -258,49 +276,35 @@ export default function Bill({ billData, commentsData }) {
                       <Typography
                         ml={1}
                         component="span"
-                        variant="body2"
+                        variant="caption"
                         color="text.secondary"
                       >
-                        {createdAt}
+                        {transformDateFormat(createdAt, true)}
                       </Typography>
                     </>
                   }
                   secondary={text}
                 />
-                {/* {isAllowedEditing(author.id, user?.id, user?.role) && ( */}
-                <Box sx={{ display: "flex", ml: 1 }}>
-                  <Link href={`/bill/edit/${id}`}>
+
+                {isAllowedEditing(author.id, user?.id, user?.role) && (
+                  <Box sx={{ display: "flex", ml: 1 }}>
                     <IconButton
-                      aria-label="edit"
+                      aria-label="delete"
                       size="large"
                       align="right"
                       sx={{
                         "&:hover": {
-                          backgroundColor: "#3498db",
+                          backgroundColor: "#d32f2f",
                           color: "#fff",
                         },
                       }}
+                      id={id}
+                      onClick={(e) => handleDeleteComment(e)}
                     >
-                      <EditIcon />
+                      <DeleteIcon />
                     </IconButton>
-                  </Link>
-                  <IconButton
-                    aria-label="delete"
-                    size="large"
-                    align="right"
-                    sx={{
-                      "&:hover": {
-                        backgroundColor: "#d32f2f",
-                        color: "#fff",
-                      },
-                    }}
-                    id={id}
-                    // onClick={(e) => handleDelete(e)}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
-                </Box>
-                {/* )} */}
+                  </Box>
+                )}
               </ListItem>
               {idx !== comments.length - 1 && (
                 <Divider variant="inset" component="li" />
