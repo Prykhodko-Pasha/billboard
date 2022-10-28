@@ -8,6 +8,7 @@ import Box from "@mui/material/Box";
 import EditIcon from "@mui/icons-material/Edit";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
+import StarIcon from "@mui/icons-material/Star";
 import isAllowedEditing from "../helpers/isAllowedEditing";
 import { deleteBillAPI } from "../services/bills-api";
 import { useUserContext } from "../context/provider";
@@ -32,16 +33,17 @@ export default function BillsList({ bills }) {
     <Box sx={{ width: "95%", margin: "0 auto" }}>
       <Grid container spacing={2}>
         {bills?.map((bill, index) => {
-          const { id, title, text, category, author, createdAt } = bill;
+          const { id, title, text, category, author, createdAt, rating } = bill;
           const formattedDate = transformDateFormat(createdAt);
 
           return (
             <Grid
               item
               sx={{ minWidth: "130px" }}
-              xs={12}
+              xl={4}
+              lg={6}
               md={6}
-              lg={4}
+              xs={12}
               key={index}
             >
               <Link href={`/bill/${id}`}>
@@ -128,11 +130,14 @@ export default function BillsList({ bills }) {
                       }}
                     >
                       <Typography sx={{ color: "#ccc" }} align="left">
-                        {formattedDate}
+                        {author.email} | {formattedDate}
                       </Typography>
-                      <Typography sx={{ color: "#ccc" }} align="right">
-                        Author: {author.email}
-                      </Typography>
+                      {rating && (
+                        <Typography sx={{ fontSize: 30 }} align="right">
+                          {rating}{" "}
+                          <StarIcon color="secondary" sx={{ fontSize: 30 }} />
+                        </Typography>
+                      )}
                     </Box>
                   </CardContent>
                 </Card>
