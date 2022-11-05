@@ -322,8 +322,8 @@ export default function Bill({ billData, commentsData }) {
       {comments && (
         <List sx={{ width: "80%" }}>
           {comments.map(({ id, text, author, createdAt }, idx) => (
-            <>
-              <ListItem alignItems="center" key={id}>
+            <div key={idx}>
+              <ListItem alignItems="center">
                 <ListItemAvatar>
                   <Avatar alt={author.name} src="/avatar.png" />
                 </ListItemAvatar>
@@ -367,7 +367,7 @@ export default function Bill({ billData, commentsData }) {
               {idx !== comments.length - 1 && (
                 <Divider variant="inset" component="li" />
               )}
-            </>
+            </div>
           ))}
         </List>
       )}
