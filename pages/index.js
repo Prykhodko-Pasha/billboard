@@ -62,6 +62,7 @@ export default function Home({ initBills, initCount }) {
 
   return (
     <>
+      {/* GREETINGS */}
       <Typography
         variant="h4"
         align="left"
@@ -71,6 +72,7 @@ export default function Home({ initBills, initCount }) {
       </Typography>
       <Divider sx={{ width: "100%", margin: "20px 0 8px" }} />
 
+      {/* FILTERS */}
       <Box
         sx={{
           width: "100%",
@@ -89,8 +91,10 @@ export default function Home({ initBills, initCount }) {
         <MultipleSelect categories={categories} setCategories={setCategories} />
       </Box>
 
+      {/* BILLS */}
       {bills && <BillsList bills={bills} />}
 
+      {/* PAGINATION */}
       {count > 1 && (
         <Box mt={5}>
           <Pagination

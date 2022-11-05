@@ -38,12 +38,14 @@ a {
   border-left: none;
   border-right: none;
   border-bottom: none;
+  background: transparent;
 }
 .card_text .ck.ck-editor__main>.ck-editor__editable:not(.ck-focused),
 .card_text {
   height: 96px;
   overflow: hidden;
   border-top: none;
+  background: transparent;
 }
 .card_text div {
   border-top: 1px solid #c4c4c4;

@@ -62,6 +62,7 @@ export const getAllBills = async (params) => {
       title: true,
       text: true,
       category: true,
+      rating: true,
       author: { select: { id: true, email: true } },
       createdAt: true,
     },
@@ -131,6 +132,7 @@ export const getUserBills = async (params) => {
       title: true,
       text: true,
       category: true,
+      rating: true,
       author: { select: { id: true, email: true } },
       createdAt: true,
     },
@@ -147,6 +149,7 @@ export const getBill = async (id) => {
       title: true,
       text: true,
       category: true,
+      rating: true,
       author: { select: { id: true, email: true } },
       createdAt: true,
     },
@@ -195,5 +198,19 @@ export const deleteBill = async (id) => {
       id,
     },
   });
+
+  // delete all bill's comments
+  await prisma.comment.deleteMany({
+    where: {
+      billId: id,
+    },
+  });
+  // delete all bill's votes
+  await prisma.vote.deleteMany({
+    where: {
+      billId: id,
+    },
+  });
+
   return bill;
 };

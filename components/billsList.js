@@ -33,7 +33,15 @@ export default function BillsList({ bills }) {
     <Box sx={{ width: "95%", margin: "0 auto" }}>
       <Grid container spacing={2}>
         {bills?.map((bill, index) => {
-          const { id, title, text, category, author, createdAt, rating } = bill;
+          const {
+            id,
+            title,
+            text,
+            category,
+            author,
+            createdAt,
+            rating = 0,
+          } = bill;
           const formattedDate = transformDateFormat(createdAt);
 
           return (
@@ -51,6 +59,8 @@ export default function BillsList({ bills }) {
                   sx={{
                     height: "250px",
                     cursor: "pointer",
+                    background:
+                      "linear-gradient(90deg,#e5e6e6 50%,transparent)",
                     "&:hover": {
                       boxShadow: "0px 10px 20px 2px rgba(0, 0, 0, 0.25)",
                     },
@@ -73,10 +83,12 @@ export default function BillsList({ bills }) {
                           alignItems: "center",
                         }}
                       >
+                        {/* TITLE */}
                         <Typography variant="h5" align="left">
                           {title}
                         </Typography>
 
+                        {/* EDITING BUTTONS */}
                         {isAllowedEditing(author.id, user?.id, user?.role) && (
                           <Box sx={{ display: "flex", ml: 1 }}>
                             <Link href={`/bill/edit/${id}`}>
@@ -112,10 +124,12 @@ export default function BillsList({ bills }) {
                           </Box>
                         )}
                       </Box>
-                      <Typography mb={1} sx={{ color: "#ccc" }} align="left">
+                      {/* CATEGORY */}
+                      <Typography mb={1} sx={{ color: "#aaa" }} align="left">
                         {category}
                       </Typography>
 
+                      {/* TEXT */}
                       <div className="card_text">
                         <MyCKEditor text={text} id={index} editable={false} />
                       </div>
@@ -129,15 +143,24 @@ export default function BillsList({ bills }) {
                         mt: "16px",
                       }}
                     >
-                      <Typography sx={{ color: "#ccc" }} align="left">
+                      {/* AUTHOR + DATE */}
+                      <Typography sx={{ color: "#aaa" }} align="left">
                         {author.email} | {formattedDate}
                       </Typography>
-                      {rating && (
-                        <Typography sx={{ fontSize: 30 }} align="right">
-                          {rating}{" "}
-                          <StarIcon color="secondary" sx={{ fontSize: 30 }} />
-                        </Typography>
-                      )}
+                      {/* RATING */}
+                      <Typography
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          fontSize: "24px",
+                          fontWeight: "600",
+                          color: "#aaa",
+                        }}
+                        align="right"
+                      >
+                        {rating.toFixed(1)}
+                        <StarIcon sx={{ fontSize: 20 }} />
+                      </Typography>
                     </Box>
                   </CardContent>
                 </Card>

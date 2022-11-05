@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import Router from "next/router";
 import Card from "@mui/material/Card";
@@ -17,6 +17,7 @@ import ListItemText from "@mui/material/ListItemText";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import Avatar from "@mui/material/Avatar";
 import TextField from "@mui/material/TextField";
+import Rating from "@mui/material/Rating";
 
 import { getBill } from "../../prisma/bills";
 import { useUserContext } from "../../context/provider";
@@ -30,15 +31,34 @@ import {
   getCommentsAPI,
 } from "../../services/comments-api";
 import { getComments } from "../../prisma/comments";
+import { getVoteAPI, postVoteAPI } from "../../services/votes-api";
 
 export default function Bill({ billData, commentsData }) {
-  const { id, title, text, category, author, createdAt } = billData;
+  const { id, title, text, category, author, createdAt, rating } = billData;
   const formattedDate = transformDateFormat(createdAt);
 
   const [user, setUser] = useUserContext();
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState(commentsData);
+  const [value, setValue] = useState(0);
+  const [averageRating, setAverageRating] = useState(rating);
   const [error, setError] = useState(null);
+
+  useEffect(() => {
+    if (user) {
+      try {
+        setVote(id, user.id);
+      } catch (error) {
+        setError(error);
+      }
+    }
+  }, [user, id]);
+
+  const setVote = async (billId, userId) => {
+    const vote = await getVoteAPI({ billId, userId });
+    console.log("vote :>> ", vote);
+    setValue(vote?.value || 0);
+  };
 
   const handleDeleteBill = async (e) => {
     try {
@@ -82,6 +102,23 @@ export default function Bill({ billData, commentsData }) {
     }
   };
 
+  const handleChangeRating = async (e, newValue) => {
+    e.preventDefault();
+    try {
+      const billId = id;
+      const userId = user.id;
+      const credentials = { value: newValue, userId, billId };
+      const newRating = await postVoteAPI(credentials);
+      // console.log("newRating :>> ", newRating);
+      if (newRating) {
+        setAverageRating(newRating);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+    setValue(newValue);
+  };
+
   return (
     <>
       {/* COME BACK BUTTON */}
@@ -99,7 +136,13 @@ export default function Bill({ billData, commentsData }) {
       </Button>
 
       {/* BILL */}
-      <Card sx={{ minWidth: "80%" }}>
+      <Card
+        sx={{
+          minWidth: "80%",
+          background: "linear-gradient(90deg,#e5e6e6 50%,transparent)",
+        }}
+        key={id}
+      >
         <CardContent
           sx={{
             display: "flex",
@@ -153,7 +196,7 @@ export default function Bill({ billData, commentsData }) {
             )}
           </Box>
 
-          <Typography mb={1} sx={{ color: "#ccc" }} align="left">
+          <Typography mb={1} sx={{ color: "#aaa" }} align="left">
             {category}
           </Typography>
 
@@ -170,11 +213,26 @@ export default function Bill({ billData, commentsData }) {
               mt: "16px",
             }}
           >
-            <Typography sx={{ color: "#ccc" }} align="left">
-              {formattedDate}
+            <Typography sx={{ color: "#aaa" }} align="left">
+              {author.email} | {formattedDate}
             </Typography>
-            <Typography sx={{ color: "#ccc" }} align="right">
-              Author: {author.email}
+            <Typography
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: "10px",
+                fontSize: "24px",
+                fontWeight: "600",
+                color: "#aaa",
+              }}
+              align="right"
+            >
+              {averageRating.toFixed(1)}
+              <Rating
+                value={value}
+                disabled={!user}
+                onChange={(e, newValue) => handleChangeRating(e, newValue)}
+              />
             </Typography>
           </Box>
         </CardContent>
