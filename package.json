@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "predeploy": "yarn run build",
+    "deploy": "netlify deploy -p",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
@@ -15,6 +17,7 @@
     "@emotion/styled": "11.8.1",
     "@mui/icons-material": "5.8.0",
     "@mui/material": "5.7.0",
+    "@netlify/plugin-nextjs": "4.28.6",
     "@prisma/client": "3.14.0",
     "axios": "0.27.2",
     "bcryptjs": "2.4.3",
@@ -26,7 +29,6 @@
     "yup": "0.32.11"
   },
   "devDependencies": {
-    "@netlify/plugin-nextjs": "4.28.6",
     "eslint": "8.15.0",
     "eslint-config-next": "12.1.6",
     "prisma": "3.14.0"
