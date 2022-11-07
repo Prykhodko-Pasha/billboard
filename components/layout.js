@@ -1,5 +1,5 @@
 import Head from "next/head";
-import AppBar from "./appBar";
+import AppBar from "../components/appBar";
 import styles from "../styles/Home.module.css";
 
 export default function Layout({ children }) {
