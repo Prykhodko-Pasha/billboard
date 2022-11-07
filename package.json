@@ -26,6 +26,7 @@
     "yup": "0.32.11"
   },
   "devDependencies": {
+    "@netlify/plugin-nextjs": "4.28.6",
     "eslint": "8.15.0",
     "eslint-config-next": "12.1.6",
     "prisma": "3.14.0"
