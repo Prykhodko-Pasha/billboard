@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import Link from "next/Link";
+import Link from "next/link";
 import Router from "next/router";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";

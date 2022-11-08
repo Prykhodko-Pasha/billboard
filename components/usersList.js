@@ -7,7 +7,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CardMedia from "@mui/material/CardMedia";
-import Link from "next/Link";
+import Link from "next/link";
 import Router from "next/router";
 import { deleteUserAPI } from "../services/users-api";
 import { useUserContext } from "../context/provider";

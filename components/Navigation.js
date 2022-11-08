@@ -1,4 +1,4 @@
-import Link from "next/Link";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import s from "../styles/Navigation.module.css";
 
