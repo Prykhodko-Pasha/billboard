@@ -72,6 +72,7 @@ export default function BillsList({ bills }) {
                       display: "flex",
                       flexDirection: "column",
                       justifyContent: "space-between",
+                      "&:last-child": { pb: "6px" },
                     }}
                   >
                     <div>

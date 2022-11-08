@@ -36,7 +36,6 @@ export function Provider({ children }) {
         user && Router.replace("/profile");
         break;
       default:
-        console.log("default :>> ");
         break;
     }
   }, [user, route]);

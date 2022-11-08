@@ -148,6 +148,7 @@ export default function Bill({ billData, commentsData }) {
             display: "flex",
             flexDirection: "column",
             justifyContent: "space-between",
+            "&:last-child": { pb: "6px" },
           }}
         >
           <Box
