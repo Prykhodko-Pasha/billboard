@@ -17,7 +17,6 @@
     "@emotion/styled": "11.8.1",
     "@mui/icons-material": "5.8.0",
     "@mui/material": "5.7.0",
-    "@netlify/plugin-nextjs": "4.28.6",
     "@prisma/client": "3.14.0",
     "axios": "0.27.2",
     "bcryptjs": "2.4.3",
