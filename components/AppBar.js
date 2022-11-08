@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import Router from "next/router";
-import Navigation from "./navigation";
-import AuthNav from "./authNav";
-import UserMenu from "./userMenu";
+import Navigation from "./Navigation";
+import AuthNav from "./AuthNav";
+import UserMenu from "./UserMenu";
 import s from "../styles/AppBar.module.css";
 import { useUserContext } from "../context/provider";
 

@@ -15,7 +15,7 @@ import TabPanel from "../components/TabPanel";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import { getAllUsersAPI } from "../services/users-api";
-import UsersList from "../components/usersList";
+import UsersList from "../components/UsersList";
 import SortSelector from "../components/sortSelector";
 import SearchInput from "../components/searchInput";
 import MultipleSelect from "../components/multipleSelect";

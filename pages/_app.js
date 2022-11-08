@@ -1,4 +1,4 @@
-import Layout from "../components/layout";
+import Layout from "../components/Layout";
 import { Provider } from "../context/provider";
 import "../styles/globals.css";
 

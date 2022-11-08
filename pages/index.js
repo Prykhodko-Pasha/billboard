@@ -4,11 +4,11 @@ import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
 import Box from "@mui/material/Box";
 import Pagination from "@mui/material/Pagination";
-import BillsList from "../components/billsList";
+import BillsList from "../components/BillsList";
 import { getAllBillsAPI } from "../services/bills-api";
-import SortSelector from "../components/sortSelector";
-import SearchInput from "../components/searchInput";
-import MultipleSelect from "../components/multipleSelect";
+import SortSelector from "../components/SortSelector";
+import SearchInput from "../components/SearchInput";
+import MultipleSelect from "../components/MultipleSelect";
 
 export default function Home({ initBills, initCount }) {
   const [page, setPage] = useState(1);
