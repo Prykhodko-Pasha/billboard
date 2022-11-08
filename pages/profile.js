@@ -8,17 +8,17 @@ import Typography from "@mui/material/Typography";
 import AddIcon from "@mui/icons-material/Add";
 import Button from "@mui/material/Button";
 import Pagination from "@mui/material/Pagination";
-import { getUserBillsAPI } from "../services/bills-api";
-import BillsList from "../components/billsList";
-import { useUserContext } from "../context/provider";
-import TabPanel from "../components/TabPanel";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
+import { getUserBillsAPI } from "../services/bills-api";
+import { useUserContext } from "../context/provider";
 import { getAllUsersAPI } from "../services/users-api";
+import TabPanel from "../components/TabPanel";
+import BillsList from "../components/BillsList";
 import UsersList from "../components/UsersList";
-import SortSelector from "../components/sortSelector";
-import SearchInput from "../components/searchInput";
-import MultipleSelect from "../components/multipleSelect";
+import SortSelector from "../components/SortSelector";
+import SearchInput from "../components/SearchInput";
+import MultipleSelect from "../components/MultipleSelect";
 
 export default function Profile() {
   const [user, setUser] = useUserContext();
