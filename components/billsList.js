@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "next/Link";
 import Router from "next/router";
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";

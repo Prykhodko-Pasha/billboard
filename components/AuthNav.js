@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "next/Link";
 import s from "../styles/Navigation.module.css";
 
 export default function AuthNav({ activeLink, setActiveLink }) {
