@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+// import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import Link from "next/link";
 import Router from "next/router";
 import Card from "@mui/material/Card";
@@ -388,3 +389,16 @@ export async function getServerSideProps(context) {
     },
   };
 }
+// export async function getServerSideProps({ params, locale }) {
+//   const { id } = params;
+//   if (!id) return null;
+//   const billData = await getBill(id);
+//   const commentsData = await getComments(id);
+//   return {
+//     props: {
+//       billData: JSON.parse(JSON.stringify(billData)),
+//       commentsData: JSON.parse(JSON.stringify(commentsData)),
+//       ...(await serverSideTranslations(locale, ["common"])),
+//     },
+//   };
+// }
