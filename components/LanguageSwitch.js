@@ -6,13 +6,13 @@ import Box from "@mui/material/Box";
 import s from "../styles/AppBar.module.css";
 
 export default function LanguageSwitch() {
-  const { locales, push, locale, pathname } = useRouter();
+  const { locales, replace, locale, asPath } = useRouter();
   const [activeLanguage, setActiveLanguage] = useState(locale);
 
   const handleChange = (e) => {
     const l = e.target.id;
     setActiveLanguage(l);
-    push(pathname, undefined, { locale: l });
+    replace(asPath, undefined, { locale: l });
   };
 
   return (

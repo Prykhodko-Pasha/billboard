@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-// import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import Link from "next/link";
 import Router from "next/router";
 import Card from "@mui/material/Card";
@@ -34,7 +34,7 @@ import {
 import { getComments } from "../../prisma/comments";
 import { getVoteAPI, postVoteAPI } from "../../services/votes-api";
 
-export default function Bill({ billData, commentsData }) {
+export default function Bill({ billData, commentsData, locale, ...otherData }) {
   const { id, title, text, category, author, createdAt, rating } = billData;
   const formattedDate = transformDateFormat(createdAt);
 
@@ -164,7 +164,7 @@ export default function Bill({ billData, commentsData }) {
             </Typography>
             {isAllowedEditing(author.id, user?.id, user?.role) && (
               <div>
-                <Link href={`/bill/edit/${id}`}>
+                <Link href={`/bill/edit/${id}`} locale={locale}>
                   <IconButton
                     aria-label="edit"
                     size="large"
@@ -377,20 +377,8 @@ export default function Bill({ billData, commentsData }) {
   );
 }
 
-export async function getServerSideProps(context) {
-  const { id } = context.params;
-  if (!id) return null;
-  const billData = await getBill(id);
-  const commentsData = await getComments(id);
-  return {
-    props: {
-      billData: JSON.parse(JSON.stringify(billData)),
-      commentsData: JSON.parse(JSON.stringify(commentsData)),
-    },
-  };
-}
-// export async function getServerSideProps({ params, locale }) {
-//   const { id } = params;
+// export async function getServerSideProps(context) {
+//   const { id } = context.params;
 //   if (!id) return null;
 //   const billData = await getBill(id);
 //   const commentsData = await getComments(id);
@@ -398,7 +386,24 @@ export async function getServerSideProps(context) {
 //     props: {
 //       billData: JSON.parse(JSON.stringify(billData)),
 //       commentsData: JSON.parse(JSON.stringify(commentsData)),
-//       ...(await serverSideTranslations(locale, ["common"])),
 //     },
 //   };
 // }
+export async function getServerSideProps(context) {
+  // console.log("context :>> ", context);
+  const { params, locale } = context;
+  const { id } = params;
+  if (!id) return null;
+  const billData = await getBill(id);
+  const commentsData = await getComments(id);
+  const otherData = await serverSideTranslations(locale, ["common"]);
+  // console.log("otherData :>> ", otherData);
+  return {
+    props: {
+      billData: JSON.parse(JSON.stringify(billData)),
+      commentsData: JSON.parse(JSON.stringify(commentsData)),
+      locale,
+      ...otherData,
+    },
+  };
+}
