@@ -1,9 +1,12 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { useTranslation } from "next-i18next";
 import s from "../styles/Navigation.module.css";
 
 export default function Navigation({ user, activeLink, setActiveLink }) {
   const [isLog, setIsLog] = useState(false);
+  const { t } = useTranslation("common");
+
   useEffect(() => setIsLog(user), [user]);
 
   return (
@@ -13,7 +16,7 @@ export default function Navigation({ user, activeLink, setActiveLink }) {
           className={activeLink === "/" ? s.nav__link_active : s.nav__link}
           onClick={async () => await setActiveLink("/")}
         >
-          Billboard
+          {t("billboard")}
         </a>
       </Link>
       {isLog && (
@@ -24,7 +27,7 @@ export default function Navigation({ user, activeLink, setActiveLink }) {
             }
             onClick={() => setActiveLink("/profile")}
           >
-            Profile
+            {t("profile")}
           </a>
         </Link>
       )}

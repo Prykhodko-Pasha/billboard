@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Router from "next/router";
+import { useTranslation } from "next-i18next";
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -17,6 +18,7 @@ import transformDateFormat from "../helpers/transformDateFormat";
 
 export default function BillsList({ bills }) {
   const [user, setUser] = useUserContext();
+  const { t } = useTranslation("common");
 
   const handleDelete = async (e) => {
     e.preventDefault();
@@ -172,8 +174,16 @@ export default function BillsList({ bills }) {
       </Grid>
     </Box>
   ) : (
-    <Typography variant="h5" align="center">
-      There are no bills &#128533;
+    <Typography
+      variant="h5"
+      align="center"
+      sx={{
+        height: "100%",
+        display: "flex",
+        alignItems: "center",
+      }}
+    >
+      {t("no_bills")}
     </Typography>
   );
 }

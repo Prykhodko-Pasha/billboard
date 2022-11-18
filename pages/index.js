@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { getAllBills } from "../prisma/bills";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
 import Box from "@mui/material/Box";
@@ -117,7 +118,7 @@ export default function Home({ initBills, initCount }) {
   );
 }
 
-export async function getServerSideProps() {
+export async function getServerSideProps({ locale }) {
   const allBills = await getAllBills({
     page: 1,
     sortKey: "id",
@@ -129,6 +130,7 @@ export async function getServerSideProps() {
     props: {
       initBills: JSON.parse(JSON.stringify(allBills.bills)),
       initCount: allBills.count,
+      ...(await serverSideTranslations(locale, ["common"])),
     },
   };
 }

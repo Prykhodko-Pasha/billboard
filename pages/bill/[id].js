@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { useTranslation } from "next-i18next";
 import Link from "next/link";
 import Router from "next/router";
 import Card from "@mui/material/Card";
@@ -34,7 +35,7 @@ import {
 import { getComments } from "../../prisma/comments";
 import { getVoteAPI, postVoteAPI } from "../../services/votes-api";
 
-export default function Bill({ billData, commentsData, locale, ...otherData }) {
+export default function Bill({ billData, commentsData, locale }) {
   const { id, title, text, category, author, createdAt, rating } = billData;
   const formattedDate = transformDateFormat(createdAt);
 
@@ -44,6 +45,7 @@ export default function Bill({ billData, commentsData, locale, ...otherData }) {
   const [value, setValue] = useState(0);
   const [averageRating, setAverageRating] = useState(rating);
   const [error, setError] = useState(null);
+  const { t } = useTranslation("common");
 
   useEffect(() => {
     if (user) {
@@ -57,7 +59,6 @@ export default function Bill({ billData, commentsData, locale, ...otherData }) {
 
   const setVote = async (billId, userId) => {
     const vote = await getVoteAPI({ billId, userId });
-    console.log("vote :>> ", vote);
     setValue(vote?.value || 0);
   };
 
@@ -78,7 +79,6 @@ export default function Bill({ billData, commentsData, locale, ...otherData }) {
       const billId = id;
       const credentials = { text: comment, authorId, billId };
       const newComment = await addCommentAPI(credentials);
-      // console.log("newComment :>> ", newComment);
       if (newComment) {
         const refreshedComments = await getCommentsAPI(id);
         setComments(refreshedComments);
@@ -110,7 +110,6 @@ export default function Bill({ billData, commentsData, locale, ...otherData }) {
       const userId = user.id;
       const credentials = { value: newValue, userId, billId };
       const newRating = await postVoteAPI(credentials);
-      // console.log("newRating :>> ", newRating);
       if (newRating) {
         setAverageRating(newRating);
       }
@@ -133,7 +132,7 @@ export default function Bill({ billData, commentsData, locale, ...otherData }) {
         startIcon={<ArrowBackIosNewIcon />}
         onClick={() => Router.back()}
       >
-        Come back
+        {t("come_back")}
       </Button>
 
       {/* BILL */}
@@ -396,14 +395,12 @@ export async function getServerSideProps(context) {
   if (!id) return null;
   const billData = await getBill(id);
   const commentsData = await getComments(id);
-  const otherData = await serverSideTranslations(locale, ["common"]);
-  // console.log("otherData :>> ", otherData);
   return {
     props: {
       billData: JSON.parse(JSON.stringify(billData)),
       commentsData: JSON.parse(JSON.stringify(commentsData)),
       locale,
-      ...otherData,
+      ...(await serverSideTranslations(locale, ["common"])),
     },
   };
 }

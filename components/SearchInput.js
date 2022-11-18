@@ -1,10 +1,12 @@
 import { useState } from "react";
+import { useTranslation } from "next-i18next";
 import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
 import SearchIcon from "@mui/icons-material/Search";
 
 export default function SearchInput({ onEnter }) {
   const [search, setSearch] = useState("");
+  const { t } = useTranslation("common");
 
   const handleChange = (e) => {
     setSearch(e.target.value);
@@ -19,7 +21,7 @@ export default function SearchInput({ onEnter }) {
     <TextField
       variant="filled"
       sx={{ width: "32%" }}
-      label="Search"
+      label={t("search")}
       value={search}
       onChange={handleChange}
       InputProps={{

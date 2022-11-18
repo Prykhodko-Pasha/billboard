@@ -1,3 +1,4 @@
+import { useTranslation } from "next-i18next";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
@@ -18,6 +19,8 @@ const MenuProps = {
 };
 
 export default function MultipleSelect({ categories, setCategories }) {
+  const { t } = useTranslation("common");
+
   const handleChange = (event) => {
     const {
       target: { value },
@@ -30,7 +33,9 @@ export default function MultipleSelect({ categories, setCategories }) {
 
   return (
     <FormControl variant="filled" sx={{ width: "32%" }}>
-      <InputLabel id="multiple-checkbox-label">Selected categories</InputLabel>
+      <InputLabel id="multiple-checkbox-label">
+        {t("selected_categories")}
+      </InputLabel>
       <Select
         labelId="multiple-checkbox-label"
         id="multiple-checkbox"

@@ -1,7 +1,10 @@
 import Link from "next/link";
 import s from "../styles/Navigation.module.css";
+import { useTranslation } from "next-i18next";
 
 export default function AuthNav({ activeLink, setActiveLink }) {
+  const { t } = useTranslation("common");
+
   return (
     <nav className={s.nav}>
       <Link href="/login">
@@ -9,7 +12,7 @@ export default function AuthNav({ activeLink, setActiveLink }) {
           className={activeLink === "/login" ? s.nav__link_active : s.nav__link}
           onClick={() => setActiveLink("/login")}
         >
-          Login
+          {t("login")}
         </a>
       </Link>
       <Link href="/signup">
@@ -19,7 +22,7 @@ export default function AuthNav({ activeLink, setActiveLink }) {
           }
           onClick={() => setActiveLink("/signup")}
         >
-          Sign up
+          {t("signup")}
         </a>
       </Link>
     </nav>
