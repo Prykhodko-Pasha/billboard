@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { getAllBills } from "../prisma/bills";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { useTranslation } from "next-i18next";
 import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
 import Box from "@mui/material/Box";
@@ -19,6 +20,7 @@ export default function Home({ initBills, initCount }) {
   const [count, setCount] = useState(Math.ceil(initCount / 9));
   const [bills, setBills] = useState(initBills);
   const [categories, setCategories] = useState([]);
+  const { t } = useTranslation("common");
 
   useEffect(() => {
     try {
@@ -69,7 +71,7 @@ export default function Home({ initBills, initCount }) {
         align="left"
         sx={{ color: "#3498db", textTransform: "uppercase", margin: "20px 0" }}
       >
-        Welcome to Billboard!
+        {t("welcome")}
       </Typography>
       <Divider sx={{ width: "100%", margin: "20px 0 8px" }} />
 

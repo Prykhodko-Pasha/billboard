@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import Router from "next/router";
+import { useTranslation } from "next-i18next";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -34,6 +36,7 @@ export default function Profile() {
   const [showAllUsers, setShowAllUsers] = useState(false);
   const [query, setQuery] = useState("");
   const [categories, setCategories] = useState([]);
+  const { t } = useTranslation("common");
 
   const handleChange = (event, newValue) => {
     setTab(newValue);
@@ -170,19 +173,14 @@ export default function Profile() {
         startIcon={<AddIcon />}
         onClick={handleNewBill}
       >
-        Create a bill
+        {t("create_bill")}
       </Button>
 
       <Box sx={{ width: "100%" }}>
         <Box sx={{ borderBottom: 1, borderColor: "divider", mb: "8px" }}>
-          <Tabs
-            value={tab}
-            onChange={handleChange}
-            aria-label="basic tabs example"
-            centered
-          >
-            <Tab label="My bills" {...a11yProps(0)} />
-            {showAllUsers && <Tab label="All users" {...a11yProps(1)} />}
+          <Tabs value={tab} onChange={handleChange} centered>
+            <Tab label={t("my_bills")} {...a11yProps(0)} />
+            {showAllUsers && <Tab label={t("all_users")} {...a11yProps(1)} />}
           </Tabs>
         </Box>
 
@@ -221,7 +219,7 @@ export default function Profile() {
         )}
       </Box>
 
-      {/* ==== Bills pagination ==== */}
+      {/* BILLS PAGINATION */}
       {tab === 0 && billsCount > 1 && (
         <Box mt={5}>
           <Pagination
@@ -241,7 +239,7 @@ export default function Profile() {
         </Box>
       )}
 
-      {/* ==== Users pagination ==== */}
+      {/* USERS PAGINATION */}
       {tab === 1 && usersCount > 1 && (
         <Box mt={5}>
           <Pagination
@@ -262,4 +260,12 @@ export default function Profile() {
       )}
     </>
   );
+}
+
+export async function getServerSideProps({ locale }) {
+  return {
+    props: {
+      ...(await serverSideTranslations(locale, ["common"])),
+    },
+  };
 }

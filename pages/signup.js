@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import Router from "next/router";
+import { useTranslation } from "next-i18next";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import IconButton from "@mui/material/IconButton";
@@ -22,6 +24,7 @@ export default function Registratoin() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState(null);
+  const { t } = useTranslation("common");
 
   useEffect(() => {
     if (!name && !email && !password) return; // skip the first render
@@ -108,7 +111,7 @@ export default function Registratoin() {
         }}
       >
         <Typography component="h1" variant="h5">
-          Registratoin page
+          {t("registratoin_page")}
         </Typography>
         <Box
           component="form"
@@ -128,7 +131,7 @@ export default function Registratoin() {
             required
             fullWidth
             id="name"
-            label="Name"
+            label={t("name")}
             name="name"
             value={name}
             autoFocus
@@ -143,7 +146,7 @@ export default function Registratoin() {
             required
             fullWidth
             id="email"
-            label="Email"
+            label={t("email")}
             name="email"
             value={email}
             autoComplete="email"
@@ -160,7 +163,7 @@ export default function Registratoin() {
             error={Boolean(error?.password)}
           >
             <InputLabel htmlFor="outlined-adornment-password">
-              Password
+              {t("password")}
             </InputLabel>
             <FilledInput
               id="outlined-adornment-password"
@@ -180,7 +183,7 @@ export default function Registratoin() {
                   </IconButton>
                 </InputAdornment>
               }
-              label="Password_"
+              label={t("password")}
             />
             <FormHelperText>{error?.password}</FormHelperText>
           </FormControl>
@@ -191,7 +194,7 @@ export default function Registratoin() {
             size="large"
             sx={{ m: "24px auto 0" }}
           >
-            Register
+            {t("signup")}
           </Button>
 
           <Button
@@ -200,10 +203,18 @@ export default function Registratoin() {
             sx={{ m: "24px auto 16px" }}
             onClick={handleLogin}
           >
-            Login
+            {t("login")}
           </Button>
         </Box>
       </Box>
     </Container>
   );
+}
+
+export async function getServerSideProps({ locale }) {
+  return {
+    props: {
+      ...(await serverSideTranslations(locale, ["common"])),
+    },
+  };
 }

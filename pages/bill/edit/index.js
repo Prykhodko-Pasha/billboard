@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import Router from "next/router";
+import { useTranslation } from "next-i18next";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
@@ -22,6 +24,7 @@ export default function CreateBill() {
   const [text, setText] = useState(null);
   const [category, setCategory] = useState("");
   const [error, setError] = useState(null);
+  const { t } = useTranslation("common");
 
   useEffect(() => {
     if (!title && !text && !category) return; // skip the first render
@@ -88,7 +91,7 @@ export default function CreateBill() {
         }}
       >
         <Typography component="h1" variant="h5">
-          Create a bill
+          {t("create_bill")}
         </Typography>
         <Box
           component="form"
@@ -102,12 +105,13 @@ export default function CreateBill() {
             justifyContent: "center",
           }}
         >
+          {/* TITLE */}
           <TextField
             margin="normal"
             required
             fullWidth
             id="title"
-            label="Title"
+            label={t("title")}
             name="title"
             value={title}
             autoFocus
@@ -116,6 +120,7 @@ export default function CreateBill() {
             helperText={error?.title}
           />
 
+          {/* DESCRIPTION */}
           <FormControl fullWidth error={Boolean(error?.text)}>
             <div
               className={
@@ -127,17 +132,18 @@ export default function CreateBill() {
             <FormHelperText>{error?.text}</FormHelperText>
           </FormControl>
 
+          {/* CATEGORY */}
           <FormControl
             margin="normal"
             sx={{ width: "50%" }}
             error={Boolean(error?.category)}
           >
-            <InputLabel id="category-label">Category</InputLabel>
+            <InputLabel id="category-label">{t("category")}</InputLabel>
             <Select
               labelId="category-label"
               name="category"
               value={category}
-              label="Category"
+              label={t("category")}
               onChange={(e) => setCategory(e.target.value)}
             >
               {categories.map((item, index) => (
@@ -149,6 +155,7 @@ export default function CreateBill() {
             <FormHelperText>{error?.category}</FormHelperText>
           </FormControl>
 
+          {/* BUTTONS */}
           <Box
             sx={{
               width: "100%",
@@ -165,7 +172,7 @@ export default function CreateBill() {
               }}
               onClick={() => Router.back()}
             >
-              Cancel
+              {t("cancel")}
             </Button>
             <Button
               type="submit"
@@ -176,11 +183,19 @@ export default function CreateBill() {
                 mt: 3,
               }}
             >
-              Create
+              {t("create")}
             </Button>
           </Box>
         </Box>
       </Box>
     </Container>
   );
+}
+
+export async function getServerSideProps({ locale }) {
+  return {
+    props: {
+      ...(await serverSideTranslations(locale, ["common"])),
+    },
+  };
 }

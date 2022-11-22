@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import Router from "next/router";
+import { useTranslation } from "next-i18next";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
@@ -32,6 +34,7 @@ export default function EditBill({ data }) {
   const [text, setText] = useState(initText);
   const [category, setCategory] = useState(initCategory);
   const [error, setError] = useState(null);
+  const { t } = useTranslation("common");
 
   useEffect(() => {
     user &&
@@ -98,7 +101,7 @@ export default function EditBill({ data }) {
         }}
       >
         <Typography component="h1" variant="h5">
-          Create a bill
+          {t("edit_bill")}
         </Typography>
         <Box
           component="form"
@@ -112,12 +115,13 @@ export default function EditBill({ data }) {
             justifyContent: "center",
           }}
         >
+          {/* TITLE */}
           <TextField
             margin="normal"
             required
             fullWidth
             id="title"
-            label="Title"
+            label={t("title")}
             name="title"
             value={title}
             autoFocus
@@ -126,6 +130,7 @@ export default function EditBill({ data }) {
             helperText={error?.title}
           />
 
+          {/* DESCRIPTION */}
           <FormControl fullWidth error={Boolean(error?.text)}>
             <div
               className={
@@ -142,13 +147,14 @@ export default function EditBill({ data }) {
             <FormHelperText>{error?.text}</FormHelperText>
           </FormControl>
 
+          {/* CATEGORY */}
           <FormControl margin="normal" sx={{ width: "50%" }}>
-            <InputLabel id="category-label">Category</InputLabel>
+            <InputLabel id="category-label">{t("category")}</InputLabel>
             <Select
               labelId="category-label"
               name="category"
               value={category}
-              label="Category"
+              label={t("category")}
               onChange={(e) => setCategory(e.target.value)}
             >
               {categories.map((item, index) => (
@@ -160,6 +166,7 @@ export default function EditBill({ data }) {
             <FormHelperText>{error?.category}</FormHelperText>
           </FormControl>
 
+          {/* BUTTONS */}
           <Box
             sx={{
               width: "100%",
@@ -176,7 +183,7 @@ export default function EditBill({ data }) {
               }}
               onClick={() => Router.back()}
             >
-              Cancel
+              {t("cancel")}
             </Button>
             <Button
               type="submit"
@@ -187,7 +194,7 @@ export default function EditBill({ data }) {
                 mt: 3,
               }}
             >
-              Save
+              {t("save")}
             </Button>
           </Box>
         </Box>
@@ -197,12 +204,14 @@ export default function EditBill({ data }) {
 }
 
 export async function getServerSideProps(context) {
-  const { id } = context.params;
+  const { params, locale } = context;
+  const { id } = params;
   if (!id) return null;
   const billData = await getBill(id);
   return {
     props: {
       data: JSON.parse(JSON.stringify(billData)),
+      ...(await serverSideTranslations(locale, ["common"])),
     },
   };
 }

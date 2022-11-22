@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import Router from "next/router";
+import { useTranslation } from "next-i18next";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import IconButton from "@mui/material/IconButton";
@@ -24,6 +26,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState(null);
+  const { t } = useTranslation("common");
 
   const handleChange = (e) => {
     const { name, value } = e.currentTarget;
@@ -110,7 +113,7 @@ export default function LoginPage() {
         }}
       >
         <Typography component="h1" variant="h5">
-          Login page
+          {t("login_page")}
         </Typography>
         <Box
           component="form"
@@ -128,9 +131,8 @@ export default function LoginPage() {
             margin="normal"
             required
             fullWidth
-            // autoFocus
             id="email"
-            label="Email"
+            label={t("email")}
             name="email"
             value={email}
             autoComplete="email"
@@ -148,7 +150,7 @@ export default function LoginPage() {
             error={Boolean(error?.password)}
           >
             <InputLabel htmlFor="outlined-adornment-password">
-              Password
+              {t("password")}
             </InputLabel>
             <FilledInput
               id="outlined-adornment-password"
@@ -168,7 +170,7 @@ export default function LoginPage() {
                   </IconButton>
                 </InputAdornment>
               }
-              label="Password_"
+              label={t("password")}
             />
             <FormHelperText>{error?.password}</FormHelperText>
           </FormControl>
@@ -182,10 +184,9 @@ export default function LoginPage() {
               mt: 3,
             }}
           >
-            Login
+            {t("login")}
           </Button>
           <Button
-            // type="text"
             variant="outlined"
             size="large"
             sx={{
@@ -195,10 +196,18 @@ export default function LoginPage() {
             }}
             onClick={handleRegistration}
           >
-            Registration
+            {t("signup")}
           </Button>
         </Box>
       </Box>
     </Container>
   );
+}
+
+export async function getServerSideProps({ locale }) {
+  return {
+    props: {
+      ...(await serverSideTranslations(locale, ["common"])),
+    },
+  };
 }

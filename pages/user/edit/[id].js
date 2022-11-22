@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import Router from "next/router";
+import { useTranslation } from "next-i18next";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
@@ -21,6 +23,7 @@ export default function EditUser({ data }) {
   const [name, setName] = useState(initName);
   const [email, setEmail] = useState(initEmail);
   const [role, setRole] = useState(initRole);
+  const { t } = useTranslation("common");
 
   useEffect(() => {
     user &&
@@ -76,7 +79,7 @@ export default function EditUser({ data }) {
         }}
       >
         <Typography component="h1" variant="h5">
-          Edit user
+          {t("edit_user")}
         </Typography>
         <Box
           component="form"
@@ -95,7 +98,7 @@ export default function EditUser({ data }) {
             required
             fullWidth
             id="title"
-            label="Name"
+            label={t("name")}
             name="name"
             value={name}
             autoFocus
@@ -106,24 +109,24 @@ export default function EditUser({ data }) {
             required
             fullWidth
             id="title"
-            label="Email"
+            label={t("email")}
             name="email"
             value={email}
             autoFocus
             onChange={handleChange}
           />
           <FormControl margin="normal" fullWidth>
-            <InputLabel id="role-label">Role</InputLabel>
+            <InputLabel id="role-label">{t("role")}</InputLabel>
             <Select
               sx={{ width: "50%" }}
               labelId="role-label"
               name="role"
               value={role}
-              label="Role"
+              label={t("role")}
               onChange={(e) => setRole(e.target.value)}
             >
-              <MenuItem value={"User"}>User</MenuItem>
-              <MenuItem value={"Moderator"}>Moderator</MenuItem>
+              <MenuItem value={"User"}>{t("user")}</MenuItem>
+              <MenuItem value={"Moderator"}>{t("moderator")}</MenuItem>
             </Select>
           </FormControl>
           <Box
@@ -142,7 +145,7 @@ export default function EditUser({ data }) {
               }}
               onClick={() => Router.back()}
             >
-              Cancel
+              {t("cancel")}
             </Button>
             <Button
               type="submit"
@@ -153,7 +156,7 @@ export default function EditUser({ data }) {
                 mt: 3,
               }}
             >
-              Save
+              {t("save")}
             </Button>
           </Box>
         </Box>
@@ -163,13 +166,14 @@ export default function EditUser({ data }) {
 }
 
 export async function getServerSideProps(context) {
-  // const { params } = context;
-  const { id } = context.params;
+  const { params, locale } = context;
+  const { id } = params;
   if (!id) return null;
   const userData = await getUser({ id });
   return {
     props: {
       data: userData,
+      ...(await serverSideTranslations(locale, ["common"])),
     },
   };
 }
