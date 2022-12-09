@@ -35,7 +35,7 @@ export default function Profile() {
   const [tab, setTab] = useState(0);
   const [showAllUsers, setShowAllUsers] = useState(false);
   const [query, setQuery] = useState("");
-  const [categories, setCategories] = useState([]);
+  const [categories, setCategories] = useState("");
   const { t } = useTranslation("common");
 
   const handleChange = (event, newValue) => {
