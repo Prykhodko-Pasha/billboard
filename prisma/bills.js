@@ -4,14 +4,11 @@ import categoriesList from "../helpers/categories";
 // READ
 export const getAllBills = async (params) => {
   // console.log("params getAllBills:>> ", params);
-  const {
-    page,
-    sortKey,
-    sortValue,
-    search,
-    "categories[]": categories,
-  } = params;
-  const filteredCategories = categories ? categories : categoriesList;
+  const { page, sortKey, sortValue, search, categories } = params;
+  // console.log("categories :>> ", categories);
+  const filteredCategories = categories
+    ? JSON.parse(categories)
+    : categoriesList;
 
   const allBills = await prisma.bill.findMany({
     where: {
