@@ -27,8 +27,7 @@ export default function MultipleSelect({ categories, setCategories }) {
     } = event;
     setCategories(
       // On autofill we get a stringified value.
-      // typeof value === "string" ? value.split(",") : value
-      JSON.stringify(value)
+      value.length === 0 ? "" : JSON.stringify(value)
     );
   };
 
