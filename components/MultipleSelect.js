@@ -27,7 +27,8 @@ export default function MultipleSelect({ categories, setCategories }) {
     } = event;
     setCategories(
       // On autofill we get a stringified value.
-      typeof value === "string" ? value.split(",") : value
+      // typeof value === "string" ? value.split(",") : value
+      JSON.stringify(value)
     );
   };
 
@@ -40,7 +41,7 @@ export default function MultipleSelect({ categories, setCategories }) {
         labelId="multiple-checkbox-label"
         id="multiple-checkbox"
         multiple
-        value={categories}
+        value={categories ? JSON.parse(categories) : []}
         onChange={handleChange}
         renderValue={(selected) => selected.join(", ")}
         MenuProps={MenuProps}

@@ -19,7 +19,7 @@ export default function Home({ initBills, initCount }) {
   const [query, setQuery] = useState("");
   const [count, setCount] = useState(Math.ceil(initCount / 9));
   const [bills, setBills] = useState(initBills);
-  const [categories, setCategories] = useState([]);
+  const [categories, setCategories] = useState("");
   const { t } = useTranslation("common");
 
   useEffect(() => {
@@ -126,7 +126,7 @@ export async function getServerSideProps({ locale }) {
     sortKey: "id",
     sortValue: "desc",
     search: "",
-    categories: [],
+    categories: "",
   });
   return {
     props: {
